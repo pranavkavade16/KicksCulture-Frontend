@@ -68,19 +68,19 @@ const NavBar = () => {
               </i>
             </h4>
             <h4 className="m-3 ms-2">
-              <a href="/wishlist" style={{ color: "white" }}>
+              <NavLink to="/wishlist" style={{ color: "white" }}>
                 <i class="bi bi-bag-heart"></i>
-              </a>
+              </NavLink>
             </h4>
             <h4 className="m-3 ms-2">
-              <a href="/profilePage" style={{ color: "white" }}>
+              <NavLink to="/profilePage" style={{ color: "white" }}>
                 <i class="bi bi-person-circle"></i>
-              </a>
+              </NavLink>
             </h4>
             <h4 className="m-3 ms-2">
-              <a href="/cart" style={{ color: "white" }}>
+              <NavLink to="/cart" style={{ color: "white" }}>
                 <i class="bi bi-cart"> </i>
-              </a>
+              </NavLink>
               {cartData?.length > 0 ? (
                 <span
                   class="position-absolute top-10 start-90 translate-middle badge rounded-pill bg-danger"
