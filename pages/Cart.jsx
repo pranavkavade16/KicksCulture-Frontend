@@ -15,13 +15,10 @@ const Cart = () => {
     }
   }, [cartData]);
 
-  const subTotal =
-    cart?.length > 0
-      ? cart?.reduce(
-          (acc, curr) => acc + curr.sneakerId.price * curr.quantity,
-          0
-        )
-      : 0;
+  const subTotal = cart.reduce(
+    (acc, curr) => acc + curr.sneakerId.price * curr.quantity,
+    0
+  );
 
   const handleAddition = async (sneakerId) => {
     const exists = cart.find((sneaker) => sneaker.sneakerId._id === sneakerId);
@@ -142,7 +139,6 @@ const Cart = () => {
       console.log("Error in adding the sneaker in wishlist", error);
     }
   };
-
   if (cartLoading)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
@@ -158,7 +154,7 @@ const Cart = () => {
         <p className="text-dark fs-5">Error: {cartError}</p>
       </div>
     );
-  if (!Array.isArray(cartData) || cartData.length === 0)
+  if (cart.length === 0)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <p className="text-dark fs-5">Cart is empty.</p>
