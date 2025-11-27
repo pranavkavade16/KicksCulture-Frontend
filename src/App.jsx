@@ -1,0 +1,55 @@
+import FrontPage from "../pages/FrontPage";
+import NavBar from "../components/NavBar";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "./App.css";
+import NewArrival from "../pages/NewArrival";
+import SneakerPage from "../pages/SneakerPage";
+import AllSneakers from "../pages/AllSneakers";
+import AdidasOriginals from "../pages/AdidasOriginals";
+import Nike from "../pages/Nike";
+import NewBalance from "../pages/NewBalance";
+import Puma from "../pages/Puma";
+import Cart from "../pages/Cart";
+import ProfilePage from "../pages/ProfilePage";
+import Wishlist from "../pages/Wishlist";
+import AddAddress from "../pages/AddAddress";
+import About from "../pages/About";
+
+import { SneakersProvider } from "../context/SneakersContext";
+import Search from "../components/Search";
+import AdidasSamba from "../pages/AdidasSamba";
+import Footer from "../components/Footer";
+
+function App() {
+  return (
+    <>
+      <SneakersProvider>
+        <Search />
+        <Router>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<FrontPage />} />
+            <Route path="/newArrival" element={<NewArrival />} />
+            <Route path="/sneakerPage/:sneakerId" element={<SneakerPage />} />
+            <Route path="/allSneakers" element={<AllSneakers />} />
+            <Route path="/adidasOriginals" element={<AdidasOriginals />} />
+            <Route path="/nike" element={<Nike />} />
+            <Route path="/newBalance" element={<NewBalance />} />
+            <Route path="/puma" element={<Puma />} />
+            <Route path="/adidasSamba" element={<AdidasSamba />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/profilePage" element={<ProfilePage />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/addAddress" element={<AddAddress />} />
+            <Route path="/about" element={<About />} />
+          </Routes>
+          <Footer />
+        </Router>
+      </SneakersProvider>
+    </>
+  );
+}
+
+export default App;
