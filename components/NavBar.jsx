@@ -1,9 +1,17 @@
 import { NavLink } from "react-router-dom";
 import Search from "./Search";
 import useSneakersContext from "../context/SneakersContext";
+import { useEffect, useState } from "react";
 
 const NavBar = () => {
   const { cartData } = useSneakersContext();
+  const [cart, setCart] = useState([]);
+
+  useEffect(() => {
+    if (cartData) {
+      setCart(cartData);
+    }
+  }, [cartData]);
 
   return (
     <header className="bg-dark text-light">
@@ -37,7 +45,7 @@ const NavBar = () => {
                 <li className="nav-item">
                   <NavLink
                     className="nav-link"
-                    to="/shoppingCart"
+                    to="/cart"
                     style={{ color: "white" }}
                   >
                     Cart
@@ -81,12 +89,12 @@ const NavBar = () => {
               <NavLink to="/cart" style={{ color: "white" }}>
                 <i class="bi bi-cart"> </i>
               </NavLink>
-              {cartData?.length > 0 ? (
+              {cart?.length > 0 ? (
                 <span
                   class="position-absolute top-10 start-90 translate-middle badge rounded-pill bg-danger"
                   style={{ fontSize: "0.6rem", padding: "0.2em 0.4em" }}
                 >
-                  {cartData?.length}
+                  {cart?.length}
                   <span class="visually-hidden">unread messages</span>
                 </span>
               ) : null}

@@ -18,6 +18,7 @@ const AllSneakers = () => {
     const updatedValue = checked
       ? [...filters[type], value]
       : filters[type].filter((item) => item != value);
+      
 
     const newFilters = { ...filters, [type]: updatedValue };
     setFilters(newFilters);

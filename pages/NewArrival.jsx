@@ -63,10 +63,27 @@ const NewArrival = () => {
     }
     console.log(products);
   };
-  if (newArrivalLoading) return <p>Loading</p>;
-  if (newArrivalError) return <p>Error: {newArrivalError}</p>;
-  if (!newArrivalData) return <p>No data available.</p>;
-  console.log(newArrivalData.sizeAvailable);
+  if (newArrivalLoading)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-dark mb-3" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="text-dark fs-5">Loading...</p>
+      </div>
+    );
+  if (newArrivalError)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <p className="text-dark fs-5">Error: {newArrivalError}</p>
+      </div>
+    );
+  if (!newArrivalData)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <p className="text-dark fs-5">No Data Available.</p>
+      </div>
+    );
 
   return (
     <>

@@ -7,7 +7,10 @@ const ProfilePage = () => {
   const { data, loading, error } = useFetch(
     "https://kicks-culture-backend.vercel.app/profile"
   );
-  console.log(data);
+  const { data: addressData } = useFetch(
+    "https://kicks-culture-backend.vercel.app/address"
+  );
+  console.log(addressData);
 
   if (loading)
     return (
@@ -42,7 +45,7 @@ const ProfilePage = () => {
           />
         </div>
         <div className="col">
-          <h2 className="m-4">
+          <h2 className="m-4 ms-5">
             <span>{data[0].fristName} </span>
             <span> {data[0].lastName}</span>
           </h2>
@@ -135,27 +138,28 @@ const ProfilePage = () => {
               </div>
             </div>
             <h4>Saved Address</h4>
-            <div class="card mb-3" style={{ maxWidth: "" }}>
-              <div class="row g-0">
-                <div class="col-md-1">
-                  <img
-                    src="https://pdp.gokwik.co/kp-account/assets/icons/no-order-found.png"
-                    class="img-fluid rounded-start"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body">
-                    <h5 class="card-title">All Address</h5>
-                    <p class="card-text">Add a new address.</p>
-                    <p class="card-text">
-                      <small class="text-body-secondary">
-                        <Link>Add Address</Link>
-                      </small>
-                    </p>
+            <div className="row">
+              {addressData?.map((address) => (
+                <div className="col-3">
+                  <div className="m-3">
+                    <div
+                      class="card"
+                      style={{ width: "17rem", height: "16rem" }}
+                    >
+                      <div class="card-body">
+                        <h4 class="card-title">
+                          {address.firstName} {address.lastName}{" "}
+                        </h4>
+
+                        <p class="card-text">
+                          {address.flatNumber}, {address.completeAddress}
+                        </p>
+                        <p className="card-text">{address.mobileNumber}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
           <div
@@ -165,19 +169,49 @@ const ProfilePage = () => {
             aria-labelledby="nav-profile-tab"
             tabindex="0"
           >
-            <div className="mt-3">
-              <a href="/addAddress">
-                <div class="card" style={{ width: "18rem", height: "16rem" }}>
-                  <div class="card-body">
-                    <p
-                      class="d-flex justify-content-center align-items-center"
-                      style={{ height: "200px" }}
+            <h4 className="mt-4">All Address</h4>
+            <div className="row">
+              <div className="col-3">
+                <div className="m-3">
+                  <a href="/addAddress">
+                    <div
+                      class="card"
+                      style={{ width: "17rem", height: "16rem" }}
                     >
-                      Add New
-                    </p>
+                      <div class="card-body">
+                        <p
+                          class="d-flex justify-content-center align-items-center"
+                          style={{ height: "200px" }}
+                        >
+                          Add New
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+
+              {addressData?.map((address) => (
+                <div className="col-3">
+                  <div className="m-3">
+                    <div
+                      class="card"
+                      style={{ width: "17rem", height: "16rem" }}
+                    >
+                      <div class="card-body">
+                        <h4 class="card-title">
+                          {address.firstName} {address.lastName}{" "}
+                        </h4>
+
+                        <p class="card-text">
+                          {address.flatNumber}, {address.completeAddress}
+                        </p>
+                        <p className="card-text">{address.mobileNumber}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </a>
+              ))}
             </div>
           </div>
           <div
@@ -187,7 +221,7 @@ const ProfilePage = () => {
             aria-labelledby="nav-contact-tab"
             tabindex="0"
           >
-            ...
+            <h4 className="mt-4">No past orders yet</h4>
           </div>
           <div
             class="tab-pane fade"
@@ -196,10 +230,13 @@ const ProfilePage = () => {
             aria-labelledby="nav-disabled-tab"
             tabindex="0"
           >
-            <h3 className="mt-4">Profile</h3>
+            <h4 className="mt-4">Profile</h4>
 
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <button className="btn me-md-2" onClick={() => setEdit(!edit)}>
+              <button
+                className="btn btn-secondary btn-sm me-md-2"
+                onClick={() => setEdit(!edit)}
+              >
                 Edit
               </button>
             </div>

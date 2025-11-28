@@ -10,15 +10,12 @@ const Cart = () => {
   console.log(cartData);
 
   useEffect(() => {
-    if (cartData) {
+    if (Array.isArray(cartData)) {
       setCart(cartData);
+    } else {
+      setCart([]);
     }
   }, [cartData]);
-
-  const subTotal = cart.reduce(
-    (acc, curr) => acc + curr.sneakerId.price * curr.quantity,
-    0
-  );
 
   const handleAddition = async (sneakerId) => {
     const exists = cart.find((sneaker) => sneaker.sneakerId._id === sneakerId);
@@ -132,9 +129,17 @@ const Cart = () => {
       const data = await response.json();
       console.log("Sneaker added to the wishlist", data);
 
-      console.log("Calling handleDelete()");
-      await handleDelete(cartItemId);
-      console.log("handleDelete() finished");
+      if (data?.message === "Sneaker added to the wishlist successfully.") {
+        console.log("Added to wishlist → deleting from cart...");
+        await handleDelete(cartItemId);
+        return;
+      }
+
+      if (data?.message === "Sneaker already in wishlist.") {
+        console.log("Sneaker already in wishlist → deleting from cart...");
+        await handleDelete(cartItemId);
+        return;
+      }
     } catch (error) {
       console.log("Error in adding the sneaker in wishlist", error);
     }
@@ -154,12 +159,15 @@ const Cart = () => {
         <p className="text-dark fs-5">Error: {cartError}</p>
       </div>
     );
-  if (cart.length === 0)
+  if (!cartData || cartData?.length === 0 || !cart || cart?.length === 0)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <p className="text-dark fs-5">Cart is empty.</p>
       </div>
     );
+  const subTotal = Array.isArray(cart)
+    ? cart.reduce((acc, curr) => acc + curr.sneakerId.price * curr.quantity, 0)
+    : 0;
 
   return (
     <div className="container">

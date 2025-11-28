@@ -1,8 +1,11 @@
 import useSneakersContext from "../context/SneakersContext";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 const Wishlist = () => {
-  const { wishlistData, wishlistLoading, wishlistError } = useSneakersContext();
+  const { wishlistData, wishlistLoading, wishlistError, wishlist } =
+    useSneakersContext();
   console.log(wishlistData);
+  console.log(wishlist);
 
   if (wishlistLoading)
     return (
@@ -30,7 +33,7 @@ const Wishlist = () => {
     <div className="container p-3">
       <h1 class="lexend-exa m-3">Wishlisted</h1>
       <div class="row row-cols-1 row-cols-md-4 g-4">
-        {wishlistData?.map((sneaker) => (
+        {wishlist?.map((sneaker) => (
           <div key={sneaker._id}>
             <Link
               to={`/sneakerPage/${sneaker.sneakerId._id}`}

@@ -1,5 +1,5 @@
 import useFetch from "../customHooks/useFetch";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const SneakersContext = createContext();
 
@@ -9,6 +9,7 @@ export default useSneakersContext;
 
 export function SneakersProvider({ children }) {
   const [cart, setCart] = useState([]);
+
   const {
     data: sneakersData,
     loading: sneakersLoading,
@@ -25,6 +26,13 @@ export function SneakersProvider({ children }) {
     error: cartError,
   } = useFetch("https://kicks-culture-backend.vercel.app/sneakers/cart");
 
+  const [wishlist, setWishlist] = useState();
+
+  useEffect(() => {
+    if (wishlistData) {
+      setWishlist(wishlistData);
+    }
+  }, [wishlistData]);
   return (
     <SneakersContext.Provider
       value={{
@@ -39,6 +47,8 @@ export function SneakersProvider({ children }) {
         cartData,
         cartLoading,
         cartError,
+        wishlist,
+        setWishlist,
       }}
     >
       {children}

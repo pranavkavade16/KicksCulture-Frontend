@@ -18,8 +18,30 @@ const AddAddress = () => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    try {
+      const response = await fetch(
+        "https://kicks-culture-backend.vercel.app/address",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!response.ok) {
+        console.log("Failed to add address.");
+      }
+
+      const data = await response.json();
+      console.log("Address added successfully:", data);
+    } catch (error) {
+      console.log("Error adding the address", error);
+    }
   };
   console.log(formData);
 
