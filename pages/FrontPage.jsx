@@ -258,7 +258,7 @@ const FrontPage = () => {
       <div>
         <h1 className="text-center lexend-exa mt-4">All Sneakers</h1> <br />
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-          <Link to="/AllSneakers" className="btn btn-dark btn-sm me-md-2">
+          <Link to="/AllSneakers" className="btn btn-dark btn-sm md-2 me-3">
             View All
           </Link>
         </div>

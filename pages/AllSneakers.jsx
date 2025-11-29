@@ -1,65 +1,12 @@
 import ProductList from "../components/ProductList";
 import SideBar from "../components/SideBar";
 import SortBy from "../components/SortBy";
-import { useEffect, useState } from "react";
 import useSneakersContext from "../context/SneakersContext";
+import useFilter from "../customHooks/useFilter";
 const AllSneakers = () => {
   const { sneakersData, sneakersLoading, sneakersError } = useSneakersContext();
-  const [products, setProducts] = useState(sneakersData);
-  const [filters, setFilters] = useState({ sizes: [], brands: [], gender: [] });
 
-  useEffect(() => {
-    setProducts(sneakersData);
-  }, [sneakersData]);
-
-  const handleSizeFilter = (event, type) => {
-    const { value, checked } = event.target;
-
-    const updatedValue = checked
-      ? [...filters[type], value]
-      : filters[type].filter((item) => item != value);
-      
-
-    const newFilters = { ...filters, [type]: updatedValue };
-    setFilters(newFilters);
-
-    let filtered = sneakersData;
-
-    if (newFilters.sizes.length > 0) {
-      filtered = sneakersData.filter((sneaker) =>
-        sneaker.sizeAvailable.some((size) =>
-          newFilters.sizes.includes(size.toString())
-        )
-      );
-    }
-
-    if (newFilters.brands.length > 0) {
-      filtered = sneakersData.filter((sneaker) =>
-        newFilters.brands.includes(sneaker.brand)
-      );
-    }
-
-    if (newFilters.gender.length > 0) {
-      filtered = sneakersData.filter((sneaker) =>
-        newFilters.gender.includes(sneaker.gender)
-      );
-    }
-    setProducts(filtered);
-  };
-
-  const handleSortChange = (option) => {
-    let sortedProducts = [...products];
-    if (option === "Price") {
-      setProducts(sneakersData);
-    } else if (option === "lowToHigh") {
-      sortedProducts.sort((a, b) => a.price - b.price);
-      setProducts(sortedProducts);
-    } else if (option === "highToLow") {
-      sortedProducts.sort((a, b) => b.price - a.price);
-      setProducts(sortedProducts);
-    }
-    console.log(products);
-  };
+  const { products, handleFilter, handleSortChange } = useFilter(sneakersData);
 
   if (sneakersLoading)
     return (
@@ -88,7 +35,7 @@ const AllSneakers = () => {
     <div className="container py-3">
       <h1 class="lexend-exa">All Sneakers</h1>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <SideBar onFilterChange={handleSizeFilter} />
+        <SideBar onFilterChange={handleFilter} />
         <div className="m-4">
           <div className="d-flex align-items-center gap-2">
             <h5 className="mb-0">Sort By: </h5>

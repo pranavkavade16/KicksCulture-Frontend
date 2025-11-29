@@ -1,11 +1,15 @@
-import useSneakersContext from '../context/SneakersContext';
-import ProductList from '../components/ProductList';
+import useSneakersContext from "../context/SneakersContext";
+import ProductList from "../components/ProductList";
+import useFilter from "../customHooks/useFilter";
+import SideBar from "../components/SideBar";
+import SortBy from "../components/SortBy";
 const NewBalance = () => {
   const { sneakersData, sneakersLoading, sneakersError } = useSneakersContext();
+  const { products, handleFilter, handleSortChange } = useFilter(sneakersData);
   console.log(sneakersData);
 
-  const newBalanceSneakers = sneakersData?.filter(
-    (sneaker) => sneaker.brand === 'New Balance'
+  const newBalanceSneakers = products?.filter(
+    (sneaker) => sneaker.brand === "New Balance"
   );
   if (sneakersLoading)
     return (
@@ -30,8 +34,17 @@ const NewBalance = () => {
     );
 
   return (
-    <div>
-      <h1>New Balance</h1>
+    <div className="container py-3">
+      <h1 class="lexend-exa">New Balance</h1>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <SideBar onFilterChange={handleFilter} />
+        <div className="m-4">
+          <div className="d-flex align-items-center gap-2">
+            <h5 className="mb-0">Sort By: </h5>
+            <SortBy onSortChange={handleSortChange} />
+          </div>
+        </div>
+      </div>
       <ProductList
         data={newBalanceSneakers}
         loading={sneakersLoading}
