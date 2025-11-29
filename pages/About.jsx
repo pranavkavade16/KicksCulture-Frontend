@@ -12,7 +12,7 @@ const About = () => {
             <img
               src="https://static.nike.com/a/images/w_1280,c_limit,q_auto,f_auto/255de165-c28d-4b30-a8d0-762f04b1b9c4/air-jordan-1-low-og-chicago-hq6998-600-release-date.jpg"
               style={{ width: "400px" }}
-              alt=""
+              alt="nikePhoto"
             />
           </div>
           <div className="col">

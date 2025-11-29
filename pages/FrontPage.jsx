@@ -84,18 +84,22 @@ const FrontPage = () => {
             </Link>
           </div>
           <div class="carousel-item">
-            <img
-              src="https://static.nike.com/a/images/f_auto/dpr_2.0,cs_srgb/h_2158,c_limit/fa2a41d6-b2dd-4073-9d6a-a7ec7195f528/jordan-sport.png"
-              class="d-block w-100"
-              alt="..."
-            />
+            <Link to="/jordan">
+              <img
+                src="https://static.nike.com/a/images/f_auto/dpr_2.0,cs_srgb/h_2158,c_limit/fa2a41d6-b2dd-4073-9d6a-a7ec7195f528/jordan-sport.png"
+                class="d-block w-100"
+                alt="..."
+              />
+            </Link>
           </div>
           <div class="carousel-item">
-            <img
-              src="https://static.nike.com/a/images/w_2880,h_1410,c_fill,f_auto/b2518af5-645e-4544-b81e-f49108b6dc4f/image.png"
-              class="d-block w-100"
-              alt="..."
-            />
+            <Link to="/jordan">
+              <img
+                src="https://static.nike.com/a/images/w_2880,h_1410,c_fill,f_auto/b2518af5-645e-4544-b81e-f49108b6dc4f/image.png"
+                class="d-block w-100"
+                alt="..."
+              />
+            </Link>
           </div>
         </div>
         <button

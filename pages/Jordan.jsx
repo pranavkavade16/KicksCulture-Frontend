@@ -1,18 +1,16 @@
-import useFetch from "../customHooks/useFetch";
+import useSneakersContext from "../context/SneakersContext";
 import ProductList from "../components/ProductList";
 import useFilter from "../customHooks/useFilter";
 import SideBar from "../components/SideBar";
 import SortBy from "../components/SortBy";
-const AdidasOriginals = () => {
-  const {
-    data: sneakersData,
-    loading: sneakersLoading,
-    error: sneakersError,
-  } = useFetch(
-    "https://kicks-culture-backend.vercel.app/sneakers/Adidas Originals"
-  );
-
+const Jordan = () => {
+  const { sneakersData, sneakersLoading, sneakersError } = useSneakersContext();
   const { products, handleFilter, handleSortChange } = useFilter(sneakersData);
+  console.log(sneakersData);
+
+  const jordanSneakers = products?.filter(
+    (sneaker) => sneaker.brand === "Jordan"
+  );
   if (sneakersLoading)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
@@ -22,12 +20,22 @@ const AdidasOriginals = () => {
         <p className="text-dark fs-5">Loading...</p>
       </div>
     );
-  if (sneakersError) return <p>Error: {error}</p>;
-  if (!sneakersData) return <p>No data available</p>;
+  if (sneakersError)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <p className="text-dark fs-5">Error: {sneakersError}</p>
+      </div>
+    );
+  if (!sneakersData)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <p className="text-dark fs-5">No Data Available.</p>
+      </div>
+    );
 
   return (
     <div className="container py-3">
-      <h1 className="lexend-exa">Adidas Original</h1>
+      <h1 class="lexend-exa">Nike Air Jordan</h1>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <SideBar onFilterChange={handleFilter} />
         <div className="m-4">
@@ -37,14 +45,12 @@ const AdidasOriginals = () => {
           </div>
         </div>
       </div>
-      
       <ProductList
-        data={products}
+        data={jordanSneakers}
         loading={sneakersLoading}
         error={sneakersError}
       />
     </div>
   );
 };
-
-export default AdidasOriginals;
+export default Jordan;

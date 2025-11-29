@@ -43,20 +43,19 @@ const AddAddress = () => {
       console.log("Error adding the address", error);
     }
   };
-  console.log(formData);
 
   return (
     <div className="container p-3">
       <h1>Add New Address</h1>
       <br />
       <form action="" onSubmit={handleSubmit}>
-        <div class="mb-3">
-          <label for="pinCode" class="form-label">
+        <div className="mb-3">
+          <label for="pinCode" className="form-label">
             Pin Code*
           </label>
           <input
             type="text"
-            class="form-control"
+            className="form-control"
             id="pinCode"
             placeholder="Eg: 110001"
             value={formData.pinCode}
@@ -64,65 +63,65 @@ const AddAddress = () => {
             required
           />
         </div>
-        <div class="mb-3">
-          <label for="flatNumber" class="form-label">
+        <div className="mb-3">
+          <label for="flatNumber" className="form-label">
             Flat/Building Number (Optional)
           </label>
           <input
             type="text"
-            class="form-control"
+            className="form-control"
             id="flatNumber"
             placeholder="Eg: A1, Block D"
             value={formData.flatNumber}
             onChange={handleChange}
           />
         </div>
-        <div class="mb-3">
-          <label for="completeAddress" class="form-label">
+        <div className="mb-3">
+          <label for="completeAddress" className="form-label">
             Complete Address*
           </label>
           <input
             type="text"
-            class="form-control"
+            className="form-control"
             id="completeAddress"
             placeholder="Eg: Plot No: 10"
             value={formData.completeAddress}
             onChange={handleChange}
           />
         </div>
-        <div class="mb-3">
-          <label for="firstName" class="form-label">
+        <div className="mb-3">
+          <label for="firstName" className="form-label">
             First Name*
           </label>
           <input
             type="text"
-            class="form-control"
+            className="form-control"
             id="firstName"
             placeholder="Eg: Joe"
             value={formData.firstName}
             onChange={handleChange}
           />
         </div>
-        <div class="mb-3">
-          <label for="lastName" class="form-label">
+        <div className="mb-3">
+          <label for="lastName" className="form-label">
             Last Name*
           </label>
           <input
             type="text"
-            class="form-control"
+            className="form-control"
             id="lastName"
             placeholder="Eg: Harrison"
             value={formData.lastName}
             onChange={handleChange}
           />
         </div>
-        <div class="mb-3">
-          <label for="mobileNumber" class="form-label">
+        <div className="mb-3">
+          <label for="mobileNumber" className="form-label">
             Mobile Number*
           </label>
           <input
             type="text"
-            class="form-control"
+            className="form-control"
             id="mobileNumber"
             placeholder="Eg: 9876543211"
             value={formData.mobileNumber}
@@ -130,13 +129,13 @@ const AddAddress = () => {
           />
         </div>
         <input
-          class="form-check-input"
+          className="form-check-input"
           type="checkbox"
           checked={formData.defaultAddress}
           id="defaultAddress"
           onChange={handleChange}
         />
-        <label class="form-check-label" for="defaultAddress">
+        <label className="form-check-label" for="defaultAddress">
           <p className="ms-2">Mark as my default address</p>
         </label>
         <br />
