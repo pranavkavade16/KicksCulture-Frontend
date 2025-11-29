@@ -16,6 +16,7 @@ import ProfilePage from "../pages/ProfilePage";
 import Wishlist from "../pages/Wishlist";
 import AddAddress from "../pages/AddAddress";
 import About from "../pages/About";
+import SomosEternos from "../pages/SomosEternos";
 
 import { SneakersProvider } from "../context/SneakersContext";
 import Search from "../components/Search";
@@ -39,6 +40,7 @@ function App() {
             <Route path="/newBalance" element={<NewBalance />} />
             <Route path="/puma" element={<Puma />} />
             <Route path="/adidasSamba" element={<AdidasSamba />} />
+            <Route path="/somosEternos" element={<SomosEternos />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/profilePage" element={<ProfilePage />} />
             <Route path="/wishlist" element={<Wishlist />} />

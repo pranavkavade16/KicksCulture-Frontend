@@ -75,11 +75,13 @@ const FrontPage = () => {
             </Link>
           </div>
           <div class="carousel-item">
-            <img
-              src="https://www.superkicks.in/cdn/shop/files/2_-_2025-10-16T171816.615.png?v=1760615363"
-              class="d-block w-100"
-              alt="..."
-            />
+            <Link to={"/somosEternos"}>
+              <img
+                src="https://www.superkicks.in/cdn/shop/files/2_-_2025-10-16T171816.615.png?v=1760615363"
+                class="d-block w-100"
+                alt="..."
+              />
+            </Link>
           </div>
           <div class="carousel-item">
             <img
