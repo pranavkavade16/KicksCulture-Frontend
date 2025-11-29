@@ -10,21 +10,25 @@ const Search = () => {
   } = useFetch("https://kicks-culture-backend.vercel.app/sneakers");
 
   const getFilteredData = () => {
-    let filtered = sneakersData;
-    if (search || search.length > 0) {
-      filtered = sneakersData.filter(
-        (sneaker) =>
-          sneaker.brand.toLowerCase().includes(search.toLowerCase()) ||
-          sneaker.colors.toLowerCase().includes(search.toLowerCase()) ||
-          sneaker.description.toLowerCase().includes(search.toLowerCase()) ||
-          sneaker.sneakerName.toLowerCase().includes(search.toLowerCase())
-      );
+    let filtered;
+    if (!Array.isArray(sneakersData)) {
+      filtered = [];
+      return filtered;
     }
-    return filtered;
-  };
+    if (search.trim() === "") {
+      filtered = sneakersData;
+      return filtered;
+    }
 
-  const handleSearch = (searchValue) => {
-    setSearch(searchValue);
+    filtered = sneakersData.filter(
+      (sneaker) =>
+        sneaker.brand.toLowerCase().includes(search.toLowerCase()) ||
+        sneaker.colors.toLowerCase().includes(search.toLowerCase()) ||
+        sneaker.description.toLowerCase().includes(search.toLowerCase()) ||
+        sneaker.sneakerName.toLowerCase().includes(search.toLowerCase())
+    );
+
+    return filtered;
   };
 
   const filteredData = getFilteredData();
@@ -49,7 +53,11 @@ const Search = () => {
           ></button>
         </div>
         <div class="offcanvas-body">
-          <form class="d-flex" role="search">
+          <form
+            class="d-flex"
+            role="search"
+            onSubmit={(e) => e.preventDefault()}
+          >
             <input
               class="form-control me-2"
               type="search"
@@ -57,13 +65,6 @@ const Search = () => {
               aria-label="Search"
               onChange={(event) => setSearch(event.target.value)}
             />
-            <button
-              class="btn btn-outline-success"
-              type="submit"
-              onClick={handleSearch}
-            >
-              Search
-            </button>
           </form>
 
           <div className="offcanvas-body  justify-content-center align-items-center">
@@ -77,6 +78,9 @@ const Search = () => {
                 </div>
               </div>
             ))}
+            {filteredData.length === 0 && (
+              <p className="text-center">No sneakers found.</p>
+            )}
           </div>
         </div>
       </div>

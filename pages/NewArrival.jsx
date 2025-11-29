@@ -1,6 +1,7 @@
 import useFetch from "../customHooks/useFetch";
 import SideBar from "../components/SideBar";
 import SortBy from "../components/SortBy";
+import ProductList from "../components/ProductList";
 import { useState, useEffect } from "react";
 const NewArrival = () => {
   const {
@@ -9,11 +10,15 @@ const NewArrival = () => {
     error: newArrivalError,
   } = useFetch("https://kicks-culture-backend.vercel.app/sneakers/newArrival");
 
-  const [products, setProducts] = useState(newArrivalData);
+  const [products, setProducts] = useState([]);
   const [filters, setFilters] = useState({ sizes: [], brands: [], gender: [] });
 
   useEffect(() => {
-    setProducts(newArrivalData);
+    if (Array.isArray(newArrivalData)) {
+      setProducts(newArrivalData);
+    } else {
+      setProducts([]);
+    }
   }, [newArrivalData]);
 
   const handleSizeFilter = (event, type) => {
@@ -98,25 +103,12 @@ const NewArrival = () => {
             </div>
           </div>
         </div>
-        <div class="row row-cols-1 row-cols-md-4 g-4">
-          {products?.map((sneaker) => (
-            <div class="col" key={sneaker._id}>
-              <div class="card">
-                <img src={sneaker.image1Url} class="card-img-top" alt="..." />
-                <div class="card-body">
-                  <p class="card-text">
-                    <small class="text-body-secondary">{sneaker.brand}</small>
-                  </p>
-                  <h5 class="card-title">{sneaker.sneakerName}</h5>
-                  <p class="card-text">
-                    <small class="text-body-secondary">{sneaker.colors}</small>
-                  </p>
-                  <p class="card-text">₹{sneaker.price}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <div class="row row-cols-1 row-cols-md-4 g-4"></div>
+        <ProductList
+          data={products}
+          loading={newArrivalLoading}
+          error={newArrivalError}
+        />
       </div>
     </>
   );
