@@ -22,6 +22,7 @@ import { SneakersProvider } from "../context/SneakersContext";
 import Search from "../components/Search";
 import AdidasSamba from "../pages/AdidasSamba";
 import Footer from "../components/Footer";
+import ScrollOnTop from "../components/ScrollOnTop";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
       <SneakersProvider>
         <Search />
         <Router>
+          <ScrollOnTop />
           <NavBar />
           <Routes>
             <Route path="/" element={<FrontPage />} />

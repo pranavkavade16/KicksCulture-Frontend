@@ -143,12 +143,12 @@ const FrontPage = () => {
 
         <div className="row row-cols-1 row-cols-md-4 g-4">
           {newArrivalData?.slice(0, 4).map((sneaker) => (
-            <div>
+            <div key={sneaker._id}>
               <Link
                 to={`/sneakerPage/${sneaker._id}`}
                 className="text-decoration-none text-dark hover-text-primary"
               >
-                <div className="col" key={sneaker._id}>
+                <div className="col">
                   <div className="card">
                     <img
                       src={sneaker.image1Url}
