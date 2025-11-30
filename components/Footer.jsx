@@ -5,13 +5,13 @@ const Footer = () => {
         <h5>Social Media</h5>
         <h5>
           <span>
-            <i class="bi bi-instagram"></i>
+            <i className="bi bi-instagram"></i>
           </span>
           <span className="ms-2">
             <i class="bi bi-facebook"></i>
           </span>
           <span className="ms-2">
-            <i class="bi bi-youtube"></i>
+            <i className="bi bi-youtube"></i>
           </span>
         </h5>
       </div>

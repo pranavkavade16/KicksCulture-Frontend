@@ -8,33 +8,33 @@ const ProductList = ({ data, loading, error }) => {
   return (
     <div className="container">
       <div className="m-4">
-        <div class="row row-cols-1 row-cols-md-4 g-4">
+        <div className="row row-cols-1 row-cols-md-4 g-4">
           {data?.map((sneaker) => (
             <div key={sneaker._id}>
               <Link
                 to={`/sneakerPage/${sneaker._id}`}
                 className="text-decoration-none text-dark hover-text-primary"
               >
-                <div class="col">
-                  <div class="card">
+                <div className="col">
+                  <div className="card">
                     <img
                       src={sneaker.image1Url}
-                      class="card-img-top"
-                      alt="..."
+                      className="card-img-top"
+                      alt="sneakerPhoto"
                     />
-                    <div class="card-body">
-                      <p class="card-text">
-                        <small class="text-body-secondary">
+                    <div className="card-body">
+                      <p className="card-text">
+                        <small className="text-body-secondary">
                           {sneaker.brand}
                         </small>
                       </p>
-                      <h5 class="card-title">{sneaker.sneakerName}</h5>
-                      <p class="card-text">
-                        <small class="text-body-secondary">
+                      <h5 className="card-title">{sneaker.sneakerName}</h5>
+                      <p className="card-text">
+                        <small className="text-body-secondary">
                           {sneaker.colors}
                         </small>
                       </p>
-                      <p class="card-text">₹{sneaker.price}</p>
+                      <p className="card-text">₹{sneaker.price}</p>
                     </div>
                   </div>
                 </div>

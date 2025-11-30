@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import ProductList from "../components/ProductList";
 import useSneakersContext from "../context/SneakersContext";
 import { useState, useEffect } from "react";
-import Wishlist from "./Wishlist";
+
 const SneakerPage = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [size, setSize] = useState();
@@ -120,14 +120,28 @@ const SneakerPage = () => {
       console.log(error);
     }
   };
-  console.log("Cart", cart);
-  console.log("Size", size);
 
-  console.log("wishlist", wishlistData);
-
-  if (sneakersLoading) return <p>Loading...</p>;
-  if (sneakersError) return <p>Error: {sneakersError}</p>;
-  if (!sneakersData) return <p>No data available</p>;
+  if (sneakersLoading)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-dark mb-3" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="text-dark fs-5">Loading...</p>
+      </div>
+    );
+  if (sneakersError)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <p className="text-dark fs-5">Error: {sneakersError}</p>
+      </div>
+    );
+  if (!sneakersData)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <p className="text-dark fs-5">No Data Available.</p>
+      </div>
+    );
   return (
     <>
       <div className="container p-3">
@@ -200,7 +214,7 @@ const SneakerPage = () => {
                   </h5>
                   <p className="mt-4 ms-2">Shoes Size(UK)</p>
                   {allSneakerData.sizeAvailable.map((size) => (
-                    <p class="d-inline-flex gap-1 m-1">
+                    <p className="d-inline-flex gap-1 m-1">
                       <input
                         type="radio"
                         className="btn-check"
@@ -221,27 +235,27 @@ const SneakerPage = () => {
                       </label>
                     </p>
                   ))}
-                  <div class="d-grid gap-2 mt-4">
+                  <div className="d-grid gap-2 mt-4">
                     <button
-                      class="btn btn-dark p-3"
+                      className="btn btn-dark p-3"
                       type="button"
                       onClick={handleCart}
                     >
                       Add to cart
                     </button>
                   </div>
-                  <div class="d-grid gap-2 mt-4">
-                    <h5 class="badge text-bg-secondary p-4">
-                      <i class="bi bi-lightning-charge-fill"></i>
+                  <div className="d-grid gap-2 mt-4">
+                    <h5 className="badge text-bg-secondary p-4">
+                      <i className="bi bi-lightning-charge-fill"></i>
                       Free express delivery
                     </h5>
                   </div>
                   <div className="mt-3">
-                    <div class="accordion" id="accordionExample">
-                      <div class="accordion-item">
-                        <h2 class="accordion-header">
+                    <div className="accordion" id="accordionExample">
+                      <div className="accordion-item">
+                        <h2 className="accordion-header">
                           <button
-                            class="accordion-button"
+                            className="accordion-button"
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target="#collapseOne"
@@ -253,18 +267,18 @@ const SneakerPage = () => {
                         </h2>
                         <div
                           id="collapseOne"
-                          class="accordion-collapse collapse show"
+                          className="accordion-collapse collapse show"
                           data-bs-parent="#accordionExample"
                         >
-                          <div class="accordion-body">
+                          <div className="accordion-body">
                             {allSneakerData.description}
                           </div>
                         </div>
                       </div>
-                      <div class="accordion-item">
-                        <h2 class="accordion-header">
+                      <div className="accordion-item">
+                        <h2 className="accordion-header">
                           <button
-                            class="accordion-button collapsed"
+                            className="accordion-button collapsed"
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target="#collapseTwo"
@@ -276,10 +290,10 @@ const SneakerPage = () => {
                         </h2>
                         <div
                           id="collapseTwo"
-                          class="accordion-collapse collapse"
+                          className="accordion-collapse collapse"
                           data-bs-parent="#accordionExample"
                         >
-                          <div class="accordion-body">
+                          <div className="accordion-body">
                             All purchases are subject to delivery fees. <br />{" "}
                             <br />
                             Standard delivery 4–9 business days Orders are
@@ -289,10 +303,10 @@ const SneakerPage = () => {
                           </div>
                         </div>
                       </div>
-                      <div class="accordion-item">
-                        <h2 class="accordion-header">
+                      <div className="accordion-item">
+                        <h2 className="accordion-header">
                           <button
-                            class="accordion-button collapsed"
+                            className="accordion-button collapsed"
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target="#collapseThree"
@@ -304,15 +318,15 @@ const SneakerPage = () => {
                         </h2>
                         <div
                           id="collapseThree"
-                          class="accordion-collapse collapse"
+                          className="accordion-collapse collapse"
                           data-bs-parent="#accordionExample"
                         >
-                          <div class="accordion-body">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
+                          <div className="accordion-body">
+                            <i className="bi bi-star-fill"></i>
+                            <i className="bi bi-star-fill"></i>
+                            <i className="bi bi-star-fill"></i>
+                            <i className="bi bi-star-fill"></i>
+                            <i className="bi bi-star-fill"></i>
                             {allSneakerData.rating} Stars
                           </div>
                         </div>
@@ -336,11 +350,11 @@ const SneakerPage = () => {
 
       <div className="container mb-5">
         <h3 className="lexend-exa">FAQ</h3>
-        <div class="accordion" id="accordionExample">
-          <div class="accordion-item">
-            <h2 class="accordion-header">
+        <div className="accordion" id="accordionExample">
+          <div className="accordion-item">
+            <h2 className="accordion-header">
               <button
-                class="accordion-button"
+                className="accordion-button"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#collapseOne"
@@ -352,10 +366,10 @@ const SneakerPage = () => {
             </h2>
             <div
               id="collapseOne"
-              class="accordion-collapse collapse show"
+              className="accordion-collapse collapse show"
               data-bs-parent="#accordionExample"
             >
-              <div class="accordion-body">
+              <div className="accordion-body">
                 KicksCulture is a leading premium lifestyle retailer in India
                 and has partnered with great homegrown labels as well as
                 globally renowned brands such as Nike, Adidas, New Balance,
@@ -369,10 +383,10 @@ const SneakerPage = () => {
               </div>
             </div>
           </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header">
+          <div className="accordion-item">
+            <h2 className="accordion-header">
               <button
-                class="accordion-button collapsed"
+                className="accordion-button collapsed"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#collapseTwo"
@@ -384,19 +398,19 @@ const SneakerPage = () => {
             </h2>
             <div
               id="collapseTwo"
-              class="accordion-collapse collapse"
+              className="accordion-collapse collapse"
               data-bs-parent="#accordionExample"
             >
-              <div class="accordion-body">
+              <div className="accordion-body">
                 In most cases, your order will be delivered to you in 4-5
                 business days.
               </div>
             </div>
           </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header">
+          <div className="accordion-item">
+            <h2 className="accordion-header">
               <button
-                class="accordion-button collapsed"
+                className="accordion-button collapsed"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#collapseThree"
@@ -408,10 +422,10 @@ const SneakerPage = () => {
             </h2>
             <div
               id="collapseThree"
-              class="accordion-collapse collapse"
+              className="accordion-collapse collapse"
               data-bs-parent="#accordionExample"
             >
-              <div class="accordion-body">
+              <div className="accordion-body">
                 We offer exchanges and returns in cases of size mismatches or
                 errors with your order. Please note, sale items are not eligible
                 for return or exchange. In the rare event you receive an

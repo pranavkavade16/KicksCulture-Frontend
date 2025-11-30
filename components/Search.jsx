@@ -36,30 +36,30 @@ const Search = () => {
   return (
     <div>
       <div
-        class="offcanvas offcanvas-end"
+        className="offcanvas offcanvas-end"
         tabindex="-1"
         id="offcanvasRight"
         aria-labelledby="offcanvasRightLabel"
       >
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasRightLabel">
+        <div className="offcanvas-header">
+          <h5 className="offcanvas-title" id="offcanvasRightLabel">
             Search Sneakers...
           </h5>
           <button
             type="button"
-            class="btn-close"
+            className="btn-close"
             data-bs-dismiss="offcanvas"
             aria-label="Close"
           ></button>
         </div>
-        <div class="offcanvas-body">
+        <div className="offcanvas-body">
           <form
-            class="d-flex"
+            className="d-flex"
             role="search"
             onSubmit={(e) => e.preventDefault()}
           >
             <input
-              class="form-control me-2"
+              className="form-control me-2"
               type="search"
               placeholder="Search"
               aria-label="Search"
@@ -69,10 +69,10 @@ const Search = () => {
 
           <div className="offcanvas-body  justify-content-center align-items-center">
             {filteredData?.map((sneaker) => (
-              <div class="card m-3" style={{ width: "19rem" }}>
+              <div className="card m-3" style={{ width: "19rem" }}>
                 <img src={sneaker.image1Url} class="card-img-top" alt="..." />
-                <div class="card-body">
-                  <p class="card-text">
+                <div className="card-body">
+                  <p className="card-text">
                     <strong>{sneaker.sneakerName}</strong>
                   </p>
                 </div>

@@ -66,7 +66,7 @@ const NavBar = () => {
           <div className="col-4 d-flex justify-content-end">
             <h4 className="m-3 ms-3">
               <i
-                class="bi bi-search"
+                className="bi bi-search"
                 type="button"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasRight"
@@ -77,25 +77,25 @@ const NavBar = () => {
             </h4>
             <h4 className="m-3 ms-2">
               <NavLink to="/wishlist" style={{ color: "white" }}>
-                <i class="bi bi-bag-heart"></i>
+                <i className="bi bi-bag-heart"></i>
               </NavLink>
             </h4>
             <h4 className="m-3 ms-2">
               <NavLink to="/profilePage" style={{ color: "white" }}>
-                <i class="bi bi-person-circle"></i>
+                <i className="bi bi-person-circle"></i>
               </NavLink>
             </h4>
             <h4 className="m-3 ms-2">
               <NavLink to="/cart" style={{ color: "white" }}>
-                <i class="bi bi-cart"> </i>
+                <i className="bi bi-cart"> </i>
               </NavLink>
               {cart?.length > 0 ? (
                 <span
-                  class="position-absolute top-10 start-90 translate-middle badge rounded-pill bg-danger"
+                  className="position-absolute top-10 start-90 translate-middle badge rounded-pill bg-danger"
                   style={{ fontSize: "0.6rem", padding: "0.2em 0.4em" }}
                 >
                   {cart?.length}
-                  <span class="visually-hidden">unread messages</span>
+                  <span className="visually-hidden">unread messages</span>
                 </span>
               ) : null}
             </h4>

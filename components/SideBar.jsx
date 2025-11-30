@@ -16,38 +16,38 @@ const SideBar = ({ onFilterChange }) => {
   return (
     <div>
       <a
-        class="btn btn-outline-secondary btn-sm my-3"
+        className="btn btn-outline-secondary btn-sm my-3"
         data-bs-toggle="offcanvas"
         href="#offcanvasExample"
         role="button"
         aria-controls="offcanvasExample"
       >
-        <i class="bi bi-filter-left"></i>
+        <i className="bi bi-filter-left"></i>
         Filters
       </a>
       <div
-        class="offcanvas offcanvas-start"
+        className="offcanvas offcanvas-start"
         tabindex="-1"
         id="offcanvasExample"
         aria-labelledby="offcanvasExampleLabel"
       >
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasExampleLabel">
+        <div className="offcanvas-header">
+          <h5 className="offcanvas-title" id="offcanvasExampleLabel">
             Filter
           </h5>
           <button
             type="button"
-            class="btn-close"
+            className="btn-close"
             data-bs-dismiss="offcanvas"
             aria-label="Close"
           ></button>
         </div>
-        <div class="offcanvas-body">
-          <div class="accordion accordion-flush" id="accordionFlushExample">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
+        <div className="offcanvas-body">
+          <div className="accordion accordion-flush" id="accordionFlushExample">
+            <div className="accordion-item">
+              <h2 className="accordion-header">
                 <button
-                  class="accordion-button collapsed"
+                  className="accordion-button collapsed"
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#flush-collapseOne"
@@ -59,22 +59,22 @@ const SideBar = ({ onFilterChange }) => {
               </h2>
               <div
                 id="flush-collapseOne"
-                class="accordion-collapse collapse"
+                className="accordion-collapse collapse"
                 data-bs-parent="#accordionFlushExample"
               >
-                <div class="accordion-body">
+                <div className="accordion-body">
                   {allSizes.map((size) => (
                     <div>
                       <div class="form-check">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           value={size}
                           id={`size-${size}`}
                           onChange={(e) => onFilterChange(e, "sizes")}
                         />
                         <label
-                          class="form-check-label"
+                          className="form-check-label"
                           htmlFor={`size-${size}`}
                         >
                           {size}
@@ -85,10 +85,10 @@ const SideBar = ({ onFilterChange }) => {
                 </div>
               </div>
             </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header">
+            <div className="accordion-item">
+              <h2 className="accordion-header">
                 <button
-                  class="accordion-button collapsed"
+                  className="accordion-button collapsed"
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#flush-collapseTwo"
@@ -100,22 +100,22 @@ const SideBar = ({ onFilterChange }) => {
               </h2>
               <div
                 id="flush-collapseTwo"
-                class="accordion-collapse collapse"
+                className="accordion-collapse collapse"
                 data-bs-parent="#accordionFlushExample"
               >
-                <div class="accordion-body">
+                <div className="accordion-body">
                   {allBrands.map((brand) => (
                     <div>
-                      <div class="form-check">
+                      <div className="form-check">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           value={brand}
                           id={`brand - ${brand}`}
                           onChange={(e) => onFilterChange(e, "brands")}
                         />
                         <label
-                          class="form-check-label"
+                          className="form-check-label"
                           htmlFor={`brand-${brand}`}
                         >
                           {brand}
@@ -126,10 +126,10 @@ const SideBar = ({ onFilterChange }) => {
                 </div>
               </div>
             </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header">
+            <div className="accordion-item">
+              <h2 className="accordion-header">
                 <button
-                  class="accordion-button collapsed"
+                  className="accordion-button collapsed"
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#flush-collapseThree"
@@ -141,22 +141,22 @@ const SideBar = ({ onFilterChange }) => {
               </h2>
               <div
                 id="flush-collapseThree"
-                class="accordion-collapse collapse"
+                className="accordion-collapse collapse"
                 data-bs-parent="#accordionFlushExample"
               >
-                <div class="accordion-body">
+                <div className="accordion-body">
                   {gender.map((gender) => (
                     <div>
-                      <div class="form-check">
+                      <div className="form-check">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           value={gender}
                           id={`brand - ${gender}`}
                           onChange={(e) => onFilterChange(e, "genders")}
                         />
                         <label
-                          class="form-check-label"
+                          className="form-check-label"
                           htmlFor={`gender-${gender}`}
                         >
                           {gender}
