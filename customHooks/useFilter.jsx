@@ -4,7 +4,11 @@ const useFilter = (sneakersData) => {
   const [filters, setFilters] = useState({ sizes: [], brands: [], gender: [] });
 
   useEffect(() => {
-    setProducts(sneakersData);
+    if (Array.isArray(sneakersData)) {
+      setProducts(sneakersData);
+    } else {
+      setProducts([]);
+    }
   }, [sneakersData]);
 
   const handleFilter = (event, type) => {

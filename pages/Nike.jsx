@@ -21,7 +21,7 @@ const Nike = () => {
   return (
     <div>
       <div className="container py-3">
-        <h1 class="lexend-exa">Nike</h1>
+        <h1 className="lexend-exa">Nike</h1>
         <ProductList
           data={sneakersData}
           loading={sneakersLoading}

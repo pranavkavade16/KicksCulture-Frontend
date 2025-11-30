@@ -53,9 +53,9 @@ const ProfilePage = () => {
       </div>
       <div className="mt-3">
         <nav>
-          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <div className="nav nav-tabs" id="nav-tab" role="tablist">
             <button
-              class="nav-link active"
+              className="nav-link active"
               id="nav-home-tab"
               data-bs-toggle="tab"
               data-bs-target="#nav-home"
@@ -67,7 +67,7 @@ const ProfilePage = () => {
               Overview
             </button>
             <button
-              class="nav-link"
+              className="nav-link"
               id="nav-profile-tab"
               data-bs-toggle="tab"
               data-bs-target="#nav-profile"
@@ -79,7 +79,7 @@ const ProfilePage = () => {
               My Address
             </button>
             <button
-              class="nav-link"
+              className="nav-link"
               id="nav-contact-tab"
               data-bs-toggle="tab"
               data-bs-target="#nav-contact"
@@ -91,7 +91,7 @@ const ProfilePage = () => {
               My Order
             </button>
             <button
-              class="nav-link"
+              className="nav-link"
               id="nav-disabled-tab"
               data-bs-toggle="tab"
               data-bs-target="#nav-disabled"
@@ -104,32 +104,32 @@ const ProfilePage = () => {
             </button>
           </div>
         </nav>
-        <div class="tab-content" id="nav-tabContent">
+        <div className="tab-content" id="nav-tabContent">
           <div
-            class="tab-pane fade show active"
+            className="tab-pane fade show active"
             id="nav-home"
             role="tabpanel"
             aria-labelledby="nav-home-tab"
             tabindex="0"
           >
             <h4 className="mt-3">My Orders</h4>
-            <div class="card mb-3" style={{ maxWidth: "" }}>
-              <div class="row g-0">
-                <div class="col-md-1">
+            <div className="card mb-3" style={{ maxWidth: "" }}>
+              <div className="row g-0">
+                <div className="col-md-1">
                   <img
                     src="https://pdp.gokwik.co/kp-account/assets/icons/no-order-found.png"
-                    class="img-fluid rounded-start"
+                    className="img-fluid rounded-start"
                     alt="..."
                   />
                 </div>
-                <div class="col-md-8">
-                  <div class="card-body">
-                    <h5 class="card-title">No past orders yet</h5>
-                    <p class="card-text">
+                <div className="col-md-8">
+                  <div className="card-body">
+                    <h5 className="card-title">No past orders yet</h5>
+                    <p className="card-text">
                       Start your first order to see it here.
                     </p>
-                    <p class="card-text">
-                      <small class="text-body-secondary">
+                    <p className="card-text">
+                      <small className="text-body-secondary">
                         <Link to="/">Shop Now</Link>
                       </small>
                     </p>
@@ -143,15 +143,15 @@ const ProfilePage = () => {
                 <div className="col-3">
                   <div className="m-3">
                     <div
-                      class="card"
+                      className="card"
                       style={{ width: "17rem", height: "16rem" }}
                     >
-                      <div class="card-body">
-                        <h4 class="card-title">
+                      <div className="card-body">
+                        <h4 className="card-title">
                           {address.firstName} {address.lastName}{" "}
                         </h4>
 
-                        <p class="card-text">
+                        <p className="card-text">
                           {address.flatNumber}, {address.completeAddress}
                         </p>
                         <p className="card-text">{address.mobileNumber}</p>
@@ -163,7 +163,7 @@ const ProfilePage = () => {
             </div>
           </div>
           <div
-            class="tab-pane fade"
+            className="tab-pane fade"
             id="nav-profile"
             role="tabpanel"
             aria-labelledby="nav-profile-tab"
@@ -175,12 +175,12 @@ const ProfilePage = () => {
                 <div className="m-3">
                   <a href="/addAddress">
                     <div
-                      class="card"
+                      className="card"
                       style={{ width: "17rem", height: "16rem" }}
                     >
-                      <div class="card-body">
+                      <div className="card-body">
                         <p
-                          class="d-flex justify-content-center align-items-center"
+                          className="d-flex justify-content-center align-items-center"
                           style={{ height: "200px" }}
                         >
                           Add New
@@ -195,15 +195,15 @@ const ProfilePage = () => {
                 <div className="col-3">
                   <div className="m-3">
                     <div
-                      class="card"
+                      className="card"
                       style={{ width: "17rem", height: "16rem" }}
                     >
-                      <div class="card-body">
-                        <h4 class="card-title">
+                      <div className="card-body">
+                        <h4 className="card-title">
                           {address.firstName} {address.lastName}{" "}
                         </h4>
 
-                        <p class="card-text">
+                        <p className="card-text">
                           {address.flatNumber}, {address.completeAddress}
                         </p>
                         <p className="card-text">{address.mobileNumber}</p>
@@ -215,7 +215,7 @@ const ProfilePage = () => {
             </div>
           </div>
           <div
-            class="tab-pane fade"
+            className="tab-pane fade"
             id="nav-contact"
             role="tabpanel"
             aria-labelledby="nav-contact-tab"
@@ -224,7 +224,7 @@ const ProfilePage = () => {
             <h4 className="mt-4">No past orders yet</h4>
           </div>
           <div
-            class="tab-pane fade"
+            className="tab-pane fade"
             id="nav-disabled"
             role="tabpanel"
             aria-labelledby="nav-disabled-tab"
@@ -232,7 +232,7 @@ const ProfilePage = () => {
           >
             <h4 className="mt-4">Profile</h4>
 
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <div className="d-grid gap-2 d-md-flex justify-content-md-end">
               <button
                 className="btn btn-secondary btn-sm me-md-2"
                 onClick={() => setEdit(!edit)}

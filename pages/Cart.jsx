@@ -176,22 +176,22 @@ const Cart = () => {
         <div className="col">
           {cart?.map((sneaker) => (
             <div key={sneaker._id}>
-              <div class="card mb-3" style={{ width: "800px" }}>
-                <div class="row g-0">
-                  <div class="col-md-4">
+              <div className="card mb-3" style={{ width: "800px" }}>
+                <div className="row g-0">
+                  <div className="col-md-4">
                     <img
                       src={sneaker.sneakerId.image1Url}
-                      class="img-fluid rounded-start"
+                      className="img-fluid rounded-start"
                       alt="..."
                     />
                   </div>
-                  <div class="col-md-8">
-                    <div class="card-body">
+                  <div className="col-md-8">
+                    <div className="card-body">
                       <span>{sneaker.sneakerId.brand}</span>
-                      <h5 class="card-title">
+                      <h5 className="card-title">
                         {sneaker.sneakerId.sneakerName}
                       </h5>
-                      <span class="text-body-secondary">
+                      <span className="text-body-secondary">
                         Size: {sneaker.size} UK
                       </span>
                       <p>MRP: ₹{sneaker.sneakerId.price}</p>
@@ -199,7 +199,7 @@ const Cart = () => {
                         <div class="btn-group border rounded-pill px-3 py-2">
                           <button
                             type="button"
-                            class="btn btn-sm p-0 border-0"
+                            className="btn btn-sm p-0 border-0"
                             onClick={() =>
                               sneaker.quantity > 1
                                 ? handleSubstraction(sneaker.sneakerId._id)
@@ -207,26 +207,26 @@ const Cart = () => {
                             }
                           >
                             {sneaker.quantity > 1 ? (
-                              <i class="bi bi-dash"></i>
+                              <i className="bi bi-dash"></i>
                             ) : (
-                              <i class="bi bi-trash"></i>
+                              <i className="bi bi-trash"></i>
                             )}
                           </button>
-                          <span class="mx-3">{sneaker.quantity}</span>
+                          <span className="mx-3">{sneaker.quantity}</span>
                           <button
                             type="button"
-                            class="btn btn-sm p-0 border-0"
+                            className="btn btn-sm p-0 border-0"
                             onClick={() =>
                               handleAddition(sneaker.sneakerId._id)
                             }
                           >
-                            <i class="bi bi-plus-lg"></i>
+                            <i className="bi bi-plus-lg"></i>
                           </button>
                         </div>
 
                         <button
                           type="button"
-                          class="btn border rounded-pill px-3 py-2 d-flex align-items-center justify-content-center mt-3"
+                          className="btn border rounded-pill px-3 py-2 d-flex align-items-center justify-content-center mt-3"
                           onClick={() =>
                             handleWishlist(sneaker.sneakerId._id, sneaker._id)
                           }
@@ -244,22 +244,22 @@ const Cart = () => {
         </div>
         <div className="col">
           <h3 className="mb-4">Summary</h3>
-          <div class="d-flex justify-content-between">
+          <div className="d-flex justify-content-between">
             <p>Subtotal</p>
-            <span class="justify-content-end">₹{subTotal}</span>
+            <span className="justify-content-end">₹{subTotal}</span>
           </div>
-          <div class="d-flex justify-content-between">
+          <div className="d-flex justify-content-between">
             <p>Estimated Delivery & Handling</p>
-            <span class="justify-content-end">₹999</span>
+            <span className="justify-content-end">₹999</span>
           </div>
           <hr />
-          <div class="d-flex justify-content-between">
+          <div className="d-flex justify-content-between">
             <p className="mb-0">Total</p>
-            <span class="justify-content-end">₹{subTotal + 999}</span>
+            <span className="justify-content-end">₹{subTotal + 999}</span>
           </div>
           <hr />
-          <div class="d-grid gap-2 col-6 mx-auto">
-            <button class="btn btn-dark p-3" type="button">
+          <div className="d-grid gap-2 col-6 mx-auto">
+            <button className="btn btn-dark p-3" type="button">
               Checkout
             </button>
           </div>

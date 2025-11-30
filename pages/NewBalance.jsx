@@ -35,7 +35,7 @@ const NewBalance = () => {
 
   return (
     <div className="container py-3">
-      <h1 class="lexend-exa">New Balance</h1>
+      <h1 className="lexend-exa">New Balance</h1>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <SideBar onFilterChange={handleFilter} />
         <div className="m-4">

@@ -20,9 +20,7 @@ const AllSneakers = () => {
   if (sneakersError)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
-        <p className="text-dark fs-5">
-          Error: {sneakersError || newArrivalError}
-        </p>
+        <p className="text-dark fs-5">Error: {sneakersError}</p>
       </div>
     );
   if (!sneakersData)
@@ -33,7 +31,7 @@ const AllSneakers = () => {
     );
   return (
     <div className="container py-3">
-      <h1 class="lexend-exa">All Sneakers</h1>
+      <h1 className="lexend-exa">All Sneakers</h1>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <SideBar onFilterChange={handleFilter} />
         <div className="m-4">
