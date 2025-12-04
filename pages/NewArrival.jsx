@@ -12,7 +12,7 @@ const NewArrival = () => {
     error: newArrivalError,
   } = useFetch("https://kicks-culture-backend.vercel.app/sneakers/newArrival");
 
-  const { products, handleFilter, handleSortChange } =
+  const { products, filters, handleFilter, handleSortChange, clearFilters } =
     useFilter(newArrivalData);
 
   if (newArrivalLoading)
@@ -42,7 +42,11 @@ const NewArrival = () => {
       <div className="container py-3">
         <h1 className="lexend-exa">New Arrivals ({newArrivalData.length})</h1>
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <SideBar onFilterChange={handleFilter} />
+          <SideBar
+            onFilterChange={handleFilter}
+            filters={filters}
+            clearFilters={clearFilters}
+          />
           <div className="m-4">
             <div className="d-flex align-items-center gap-2">
               <h5 className="mb-0">Sort By: </h5>

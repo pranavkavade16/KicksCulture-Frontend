@@ -182,13 +182,23 @@ const Cart = () => {
                     <img
                       src={sneaker.sneakerId.image1Url}
                       className="img-fluid rounded-start"
-                      alt="..."
+                      alt="sneakerPhoto"
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        (window.location.href = `/sneakerPage/${sneaker.sneakerId._id}`)
+                      }
                     />
                   </div>
                   <div className="col-md-8">
                     <div className="card-body">
                       <span>{sneaker.sneakerId.brand}</span>
-                      <h5 className="card-title">
+                      <h5
+                        className="card-title"
+                        onClick={() =>
+                          (window.location.href = `/sneakerPage/${sneaker.sneakerId._id}`)
+                        }
+                        style={{ cursor: "pointer" }}
+                      >
                         {sneaker.sneakerId.sneakerName}
                       </h5>
                       <span className="text-body-secondary">

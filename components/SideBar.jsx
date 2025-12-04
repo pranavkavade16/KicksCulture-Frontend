@@ -1,6 +1,6 @@
 import useSneakersContext from "../context/SneakersContext";
 import { useState } from "react";
-const SideBar = ({ onFilterChange }) => {
+const SideBar = ({ onFilterChange, filters, clearFilters }) => {
   const { sneakersData } = useSneakersContext();
   const allSizes = [
     ...new Set(sneakersData?.flatMap((sneaker) => sneaker.sizeAvailable)),
@@ -64,13 +64,14 @@ const SideBar = ({ onFilterChange }) => {
               >
                 <div className="accordion-body">
                   {allSizes.map((size) => (
-                    <div>
-                      <div class="form-check">
+                    <div key={size}>
+                      <div className="form-check">
                         <input
                           className="form-check-input"
                           type="checkbox"
-                          value={size}
+                          value={String(size)}
                           id={`size-${size}`}
+                          checked={filters.sizes.includes(String(size))}
                           onChange={(e) => onFilterChange(e, "sizes")}
                         />
                         <label
@@ -112,6 +113,7 @@ const SideBar = ({ onFilterChange }) => {
                           type="checkbox"
                           value={brand}
                           id={`brand - ${brand}`}
+                          checked={filters.brands.includes(brand)}
                           onChange={(e) => onFilterChange(e, "brands")}
                         />
                         <label
@@ -152,8 +154,9 @@ const SideBar = ({ onFilterChange }) => {
                           className="form-check-input"
                           type="checkbox"
                           value={gender}
-                          id={`brand - ${gender}`}
-                          onChange={(e) => onFilterChange(e, "genders")}
+                          id={`gender - ${gender}`}
+                          checked={filters.gender.includes(gender)}
+                          onChange={(e) => onFilterChange(e, "gender")}
                         />
                         <label
                           className="form-check-label"
@@ -164,6 +167,83 @@ const SideBar = ({ onFilterChange }) => {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+            <div className="accordion-item">
+              <h2 className="accordion-header">
+                <button
+                  className="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#flush-collapseFour"
+                  aria-expanded="false"
+                  aria-controls="flush-collapseFour"
+                >
+                  Rating
+                </button>
+              </h2>
+              <div
+                id="flush-collapseFour"
+                className="accordion-collapse collapse"
+                data-bs-parent="#accordionFlushExample"
+              >
+                <div className="accordion-body">
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value="1"
+                      id="rating-1"
+                      checked={filters.rating.includes("1")}
+                      onChange={(e) => onFilterChange(e, "rating")}
+                    />
+                    <label className="form-check-label" htmlFor="rating-1">
+                      1.0 to 5.0
+                    </label>
+                  </div>
+
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value="2"
+                      id="rating-2"
+                      checked={filters.rating.includes("2")}
+                      onChange={(e) => onFilterChange(e, "rating")}
+                    />
+                    <label className="form-check-label" htmlFor="rating-2">
+                      2.0 to 5.0
+                    </label>
+                  </div>
+
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value="3"
+                      id="rating-3"
+                      checked={filters.rating.includes("3")}
+                      onChange={(e) => onFilterChange(e, "rating")}
+                    />
+                    <label className="form-check-label" htmlFor="rating-3">
+                      3.0 to 5.0
+                    </label>
+                  </div>
+
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value="4"
+                      id="rating-4"
+                      checked={filters.rating.includes("4")}
+                      onChange={(e) => onFilterChange(e, "rating")}
+                    />
+                    <label className="form-check-label" htmlFor="rating-4">
+                      4.0 to 5.0
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>

@@ -88,7 +88,7 @@ const SneakerPage = () => {
       alert("Please select your size");
     }
     const exists = cart.find(
-      (sneaker) => sneaker.sneakerId._id === allSneakerData._id
+      (sneaker) => sneaker.sneakerId?._id === allSneakerData._id
     );
     if (!exists) {
       setCart((prev) => [...prev, allSneakerData]);

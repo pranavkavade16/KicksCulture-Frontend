@@ -1,64 +1,89 @@
-import { useState, useEffect } from "react";
-const useFilter = (sneakersData) => {
-  const [products, setProducts] = useState(sneakersData);
-  const [filters, setFilters] = useState({ sizes: [], brands: [], gender: [] });
+import { useState, useMemo, useCallback, useEffect } from "react";
 
-  useEffect(() => {
-    if (Array.isArray(sneakersData)) {
-      setProducts(sneakersData);
-    } else {
-      setProducts([]);
+const useFilter = (sneakersData = []) => {
+  const [filters, setFilters] = useState({
+    sizes: [],
+    brands: [],
+    gender: [],
+    rating: [],
+  });
+
+  const [sortOption, setSortOption] = useState(null);
+
+  const baseData = Array.isArray(sneakersData) ? sneakersData : [];
+
+  const filteredProducts = useMemo(() => {
+    return baseData.filter((sneaker) => {
+      if (filters.sizes.length > 0) {
+        const selectedSizes = new Set(filters.sizes.map(String));
+        const hasSize = (sneaker.sizeAvailable || []).some((size) =>
+          selectedSizes.has(String(size))
+        );
+        if (!hasSize) return false;
+      }
+
+      if (filters.brands.length > 0) {
+        const selectedBrands = new Set(filters.brands);
+        if (!selectedBrands.has(sneaker.brand)) return false;
+      }
+
+      if (filters.gender.length > 0) {
+        const selectedGender = new Set(filters.gender);
+        if (!selectedGender.has(sneaker.gender)) return false;
+      }
+
+      if (filters.rating.length > 0) {
+        const minRating = Math.min(...filters.rating.map(Number));
+        if (Number(sneaker.rating ?? 0) < minRating) return false;
+      }
+
+      return true;
+    });
+  }, [baseData, filters]);
+
+  const products = useMemo(() => {
+    const array = [...filteredProducts];
+    if (sortOption === "lowToHigh") {
+      array.sort((a, b) => Number(a.price) - Number(b.price));
+    } else if (sortOption === "highToLow") {
+      array.sort((a, b) => Number(b.price) - Number(a.price));
     }
-  }, [sneakersData]);
+    return array;
+  }, [filteredProducts, sortOption]);
 
-  const handleFilter = (event, type) => {
+  const handleFilter = useCallback((event, type) => {
     const { value, checked } = event.target;
 
-    const updatedValue = checked
-      ? [...filters[type], value]
-      : filters[type].filter((item) => item != value);
+    setFilters((prev) => {
+      const prevValues = prev[type] ?? [];
+      const nextValues = checked
+        ? [...prevValues, value]
+        : prevValues.filter((item) => item !== value);
 
-    const newFilters = { ...filters, [type]: updatedValue };
-    setFilters(newFilters);
+      return { ...prev, [type]: nextValues };
+    });
+  }, []);
 
-    let filtered = sneakersData;
+  const clearFilters = useCallback(() => {
+    setFilters({ sizes: [], brands: [], gender: [], rating: [] });
+  }, []);
 
-    if (newFilters.sizes.length > 0) {
-      filtered = sneakersData.filter((sneaker) =>
-        sneaker.sizeAvailable.some((size) =>
-          newFilters.sizes.includes(size.toString())
-        )
-      );
-    }
+  const handleSortChange = useCallback((option) => {
+    setSortOption(option || null);
+  }, []);
 
-    if (newFilters.brands.length > 0) {
-      filtered = sneakersData.filter((sneaker) =>
-        newFilters.brands.includes(sneaker.brand)
-      );
-    }
+  useEffect(() => {
+    setSortOption(null);
+  }, [sneakersData]);
 
-    if (newFilters.gender.length > 0) {
-      filtered = sneakersData.filter((sneaker) =>
-        newFilters.gender.includes(sneaker.gender)
-      );
-    }
-    setProducts(filtered);
+  return {
+    products,
+    filters,
+    sortOption,
+    handleFilter,
+    handleSortChange,
+    clearFilters,
   };
-
-  const handleSortChange = (option) => {
-    let sortedProducts = [...products];
-    if (option === "Price") {
-      setProducts(sneakersData);
-    } else if (option === "lowToHigh") {
-      sortedProducts.sort((a, b) => a.price - b.price);
-      setProducts(sortedProducts);
-    } else if (option === "highToLow") {
-      sortedProducts.sort((a, b) => b.price - a.price);
-      setProducts(sortedProducts);
-    }
-    console.log(products);
-  };
-  return { products, handleFilter, handleSortChange };
 };
 
 export default useFilter;
