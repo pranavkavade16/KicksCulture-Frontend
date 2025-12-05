@@ -23,6 +23,7 @@ import Search from "../components/Search";
 import AdidasSamba from "../pages/AdidasSamba";
 import Footer from "../components/Footer";
 import ScrollOnTop from "../components/ScrollOnTop";
+import * as bootstrap from "bootstrap";
 
 function App() {
   return (

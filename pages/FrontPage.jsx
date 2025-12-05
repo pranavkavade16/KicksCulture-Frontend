@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import useFetch from "../customHooks/useFetch";
 import useSneakersContext from "../context/SneakersContext";
+import ProductList from "../components/ProductList";
 
 const FrontPage = () => {
   const { sneakersData, sneakersLoading, sneakersError } = useSneakersContext();
@@ -34,7 +35,7 @@ const FrontPage = () => {
       </div>
     );
   return (
-    <div>
+    <div className="overflow-hidden">
       <div id="carouselExampleIndicators" className="carousel slide">
         <div className="carousel-indicators">
           <button
@@ -69,7 +70,7 @@ const FrontPage = () => {
             <Link to={"/adidasSamba"}>
               <img
                 src="https://www.superkicks.in/cdn/shop/files/DESKTOP-TOKYO-F.gif?v=1761723225"
-                className="d-block w-100"
+                className="d-block w-100 img-fluid"
                 alt="adidasCoverPhoto"
               />
             </Link>
@@ -78,7 +79,7 @@ const FrontPage = () => {
             <Link to={"/somosEternos"}>
               <img
                 src="https://www.superkicks.in/cdn/shop/files/2_-_2025-10-16T171816.615.png?v=1760615363"
-                className="d-block w-100"
+                className="d-block w-100 img-fluid"
                 alt="somosEternosCoverPhoto"
               />
             </Link>
@@ -87,7 +88,7 @@ const FrontPage = () => {
             <Link to="/jordan">
               <img
                 src="https://static.nike.com/a/images/f_auto/dpr_2.0,cs_srgb/h_2158,c_limit/fa2a41d6-b2dd-4073-9d6a-a7ec7195f528/jordan-sport.png"
-                className="d-block w-100"
+                className="d-block w-100 img-fluid"
                 alt="JordanCoverPhoto"
               />
             </Link>
@@ -96,7 +97,7 @@ const FrontPage = () => {
             <Link to="/jordan">
               <img
                 src="https://static.nike.com/a/images/w_2880,h_1410,c_fill,f_auto/b2518af5-645e-4544-b81e-f49108b6dc4f/image.png"
-                className="d-block w-100"
+                className="d-block w-100 img-fluid"
                 alt="JordanCoverPhoto"
               />
             </Link>
@@ -127,56 +128,59 @@ const FrontPage = () => {
           <span className="visually-hidden">Next</span>
         </button>
       </div>
-      <br />
-      <h1 className="text-center">Built by Sneakerheads, for Sneakerheads.</h1>
-      <br />
+      <div className="container mt-4 mb-4">
+        <h1 className="text-center">
+          Built by Sneakerheads, for Sneakerheads.
+        </h1>
+      </div>
       <hr />
-      <div className="m-3">
-        <div className="mt-4">
-          <h1 className="text-center lexend-exa">New Arrival</h1>
-          <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-            <Link to="/newArrival" className="btn btn-dark btn-sm me-md-2 mb-2">
+      <div>
+        <div className="m-2">
+          <h1 className="text-center lexend-exa mt-4">New Arrival</h1>
+          <div className="d-flex justify-content-center mb-3">
+            <Link to="/newArrival" className="btn btn-dark btn-sm mt-3">
               View All
             </Link>
           </div>
-        </div>
 
-        <div className="row row-cols-1 row-cols-md-4 g-4">
-          {newArrivalData?.slice(0, 4).map((sneaker) => (
-            <div key={sneaker._id}>
-              <Link
-                to={`/sneakerPage/${sneaker._id}`}
-                className="text-decoration-none text-dark hover-text-primary"
-              >
-                <div className="col">
-                  <div className="card">
-                    <img
-                      src={sneaker.image1Url}
-                      className="card-img-top"
-                      alt="..."
-                    />
-                    <div className="card-body">
-                      <p className="card-text">
-                        <small className="text-body-secondary">
-                          {sneaker.brand}
-                        </small>
-                      </p>
-                      <h5 className="card-title">{sneaker.sneakerName}</h5>
-                      <p className="card-text">
-                        <small className="text-body-secondary">
-                          {sneaker.colors}
-                        </small>
-                      </p>
-                      <p className="card-text">₹{sneaker.price}</p>
+          <div className="row row-cols-1 row-cols-md-4 g-4">
+            {newArrivalData?.slice(0, 4).map((sneaker) => (
+              <div key={sneaker._id}>
+                <Link
+                  to={`/sneakerPage/${sneaker._id}`}
+                  className="text-decoration-none text-dark hover-text-primary"
+                >
+                  <div className="col">
+                    <div className="card h-100 shadow-sm">
+                      <img
+                        src={sneaker.image1Url}
+                        className="card-img-top img-fluid"
+                        alt="sneakerPhoto"
+                      />
+                      <div className="card-body">
+                        <p className="card-text">
+                          <small className="text-body-secondary">
+                            {sneaker.brand}
+                          </small>
+                        </p>
+                        <h5 className="card-title">{sneaker.sneakerName}</h5>
+                        <p className="card-text">
+                          <small className="text-body-secondary">
+                            {sneaker.colors}
+                          </small>
+                        </p>
+                        <p className="card-text">₹{sneaker.price}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            </div>
-          ))}
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-      <div>
+
+      <div className="conatiner mt-4">
         <div className="card-group mt-4">
           <Link
             to={`/nike`}
@@ -185,7 +189,7 @@ const FrontPage = () => {
             <div className="card">
               <img
                 src="https://www.superkicks.in/cdn/shop/files/Nike_4c272695-6369-4039-92b6-b497425de639.jpg?v=1755081263"
-                className="card-img-top"
+                className="card-img-top img-fluid"
                 alt="nike"
               />
               <div className="card-body">
@@ -207,7 +211,7 @@ const FrontPage = () => {
             <div className="card">
               <img
                 src="https://www.superkicks.in/cdn/shop/files/Adidas_ca63a075-a68e-4167-8f99-08ff5a81d4ae.jpg?v=1755081300"
-                className="card-img-top"
+                className="card-img-top img-fluid"
                 alt="adidasOriginals"
               />
               <div className="card-body">
@@ -229,7 +233,7 @@ const FrontPage = () => {
             <div className="card">
               <img
                 src="https://www.superkicks.in/cdn/shop/files/NB_c5174975-e857-4ed7-91e1-e10fec8cf7ff.jpg?v=1755081284"
-                className="card-img-top"
+                className="card-img-top img-fluid"
                 alt="newBalance"
               />
               <div className="card-body">
@@ -251,7 +255,7 @@ const FrontPage = () => {
             <div className="card">
               <img
                 src="https://www.superkicks.in/cdn/shop/files/Puma_371fcf9b-63ae-4fb8-816c-6e10c2e863da.jpg?v=1755081312"
-                className="card-img-top"
+                className="card-img-top img-fluid"
                 alt="puma"
               />
               <div className="card-body">
@@ -267,10 +271,10 @@ const FrontPage = () => {
           </Link>
         </div>
       </div>
-      <div>
+      <div className=" container mt-5">
         <h1 className="text-center lexend-exa mt-4">All Sneakers</h1> <br />
-        <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-          <Link to="/AllSneakers" className="btn btn-dark btn-sm md-2 me-3">
+        <div className="d-flex justify-content-center mb-3">
+          <Link to="/AllSneakers" className="btn btn-dark btn-sm md-2 ">
             View All
           </Link>
         </div>
@@ -284,11 +288,11 @@ const FrontPage = () => {
                 className="text-decoration-none text-dark hover-text-primary"
               >
                 <div className="col">
-                  <div className="card">
+                  <div className="card h-100 shadow-sm">
                     <img
                       src={sneaker.image1Url}
-                      className="card-img-top"
-                      alt="..."
+                      className="card-img-top img-fluid"
+                      alt="sneakerPhoto"
                     />
                     <div className="card-body">
                       <p className="card-text">

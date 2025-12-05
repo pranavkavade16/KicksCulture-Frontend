@@ -254,9 +254,29 @@ const Cart = () => {
         </div>
         <div className="col">
           <h3 className="mb-4">Summary</h3>
+          <div>
+            {cart?.map((sneaker) => (
+              <div
+                key={sneaker._id}
+                className="d-flex justify-content-between align-items-center mb-2"
+              >
+                <div>
+                  <p className="mb-1 fw-semibold">
+                    {sneaker.sneakerId.sneakerName}
+                  </p>
+                  <p className="mb-0 text-muted">Qty: {sneaker.quantity}</p>
+                </div>
+                <div className="text-end">
+                  <p className="mb-0 fw-semibold">
+                    ₹ {sneaker.quantity * sneaker.sneakerId.price}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
           <div className="d-flex justify-content-between">
             <p>Subtotal</p>
-            <span className="justify-content-end">₹{subTotal}</span>
+            <span className="justify-content-end fw-semibold">₹{subTotal}</span>
           </div>
           <div className="d-flex justify-content-between">
             <p>Estimated Delivery & Handling</p>
@@ -265,7 +285,9 @@ const Cart = () => {
           <hr />
           <div className="d-flex justify-content-between">
             <p className="mb-0">Total</p>
-            <span className="justify-content-end">₹{subTotal + 999}</span>
+            <span className="justify-content-end fw-semibold">
+              ₹{subTotal + 999}
+            </span>
           </div>
           <hr />
           <div className="d-grid gap-2 col-6 mx-auto">

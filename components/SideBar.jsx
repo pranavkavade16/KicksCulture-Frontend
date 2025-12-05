@@ -1,3 +1,5 @@
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import useSneakersContext from "../context/SneakersContext";
 import { useState } from "react";
 const SideBar = ({ onFilterChange, filters, clearFilters }) => {
@@ -27,7 +29,7 @@ const SideBar = ({ onFilterChange, filters, clearFilters }) => {
       </a>
       <div
         className="offcanvas offcanvas-start"
-        tabindex="-1"
+        tabIndex="-1"
         id="offcanvasExample"
         aria-labelledby="offcanvasExampleLabel"
       >
@@ -248,6 +250,12 @@ const SideBar = ({ onFilterChange, filters, clearFilters }) => {
               </div>
             </div>
           </div>
+          <button
+            className="btn btn-secondary btn-sm mt-2"
+            onClick={clearFilters}
+          >
+            Clear
+          </button>
         </div>
       </div>
     </div>

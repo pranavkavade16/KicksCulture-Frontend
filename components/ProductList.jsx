@@ -5,8 +5,47 @@ import * as bootstrap from "bootstrap";
 const ProductList = ({ data, loading, error }) => {
   const [productSize, setProductSize] = useState();
   const [selectedSneaker, setSelectedSneaker] = useState(null);
-  const { cart, setCart } = useSneakersContext();
-  console.log(data);
+  const { cart, setCart, wishlistData, setWishlistData } = useSneakersContext();
+  console.log(selectedSneaker);
+
+  const handleWishlist = async (sneaker) => {
+    try {
+      const exists = wishlistData.find(
+        (sneaker) => sneaker.sneakerId?._id === sneaker._id
+      );
+      let response;
+      if (exists) {
+        alert("Sneaker already in wishlist");
+        return;
+      }
+      response = await fetch(
+        "https://kicks-culture-backend.vercel.app/sneakers/wishlist",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: "69178123a154f88538f56d4e",
+            sneakerId: sneaker._id,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw "Failed to add sneaker.";
+      }
+      const data = await response.json();
+      console.log("Sneaker added to the wishlist", data);
+
+      const wishlistItem = {
+        userId: "69178123a154f88538f56d4e",
+        sneakerId: sneaker,
+      };
+      setWishlistData((prev) => [...prev, wishlistItem]);
+    } catch (error) {
+      console.log("Error in adding the sneaker in wishlist", error);
+    }
+  };
 
   const handleCart = async () => {
     if (!productSize) {
@@ -78,13 +117,13 @@ const ProductList = ({ data, loading, error }) => {
   if (!data) return <p>No data available</p>;
 
   return (
-    <div className="container">
+    <div className="">
       <div className="m-4">
         <div className="row row-cols-1 row-cols-md-4 g-4">
           {data?.map((sneaker) => (
             <div key={sneaker._id}>
               <div className="col">
-                <div className="card" style={{ height: "495px" }}>
+                <div className="card" style={{ height: "510px" }}>
                   <Link
                     to={`/sneakerPage/${sneaker._id}`}
                     className="text-decoration-none text-dark hover-text-primary"
@@ -128,8 +167,13 @@ const ProductList = ({ data, loading, error }) => {
                         Add to cart
                       </button>
 
-                      <button className="btn w-50 py-3 text-center fw-semibold text-primary rounded-0">
-                        Wsishlist
+                      <button
+                        className="btn w-50 py-3 text-center fw-semibold text-primary rounded-0"
+                        onClick={() => {
+                          handleWishlist(sneaker);
+                        }}
+                      >
+                        Wishlist
                       </button>
                     </div>
                   </div>

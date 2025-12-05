@@ -1,11 +1,14 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ProductList from "../components/ProductList";
 import useSneakersContext from "../context/SneakersContext";
 import { useState, useEffect } from "react";
+import * as bootstrap from "bootstrap";
 
 const SneakerPage = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [size, setSize] = useState();
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   const {
     sneakersData,
     sneakersLoading,
@@ -13,8 +16,13 @@ const SneakerPage = () => {
     cart,
     setCart,
     wishlistData,
-    setWishlist,
+    fetchWishlist,
+    setWishlistData,
   } = useSneakersContext();
+
+  useEffect(() => {
+    fetchWishlist();
+  }, [fetchWishlist]);
 
   const { sneakerId } = useParams();
   const allSneakerData = sneakersData?.find(
@@ -24,36 +32,46 @@ const SneakerPage = () => {
   useEffect(() => {
     if (wishlistData && allSneakerData) {
       const exists = wishlistData.some(
-        (item) => item.sneakerId._id === allSneakerData._id
+        (item) => item.sneakerId?._id === allSneakerData._id
       );
       setIsWishlisted(exists);
     }
   }, [wishlistData, allSneakerData]);
 
+  const showToast = (message) => {
+    setToastMessage(message);
+    const toastLiveExample = document.getElementById("liveToast");
+    const toastBootstrap =
+      bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+    toastBootstrap.show();
+  };
+
   const handleWishlist = async () => {
     try {
       const exists = wishlistData.find(
-        (sneaker) => sneaker.sneakerId._id === allSneakerData._id
+        (item) => item.sneakerId?._id === allSneakerData._id
       );
+
       let response;
+
       if (exists) {
         response = await fetch(
           `https://kicks-culture-backend.vercel.app/sneakers/wishlist/delete/${exists._id}`,
-          {
-            method: "DELETE",
-          }
+          { method: "DELETE" }
         );
 
-        setIsWishlisted(!isWishlisted);
+        if (!response.ok)
+          throw new Error("Failed to remove sneaker from wishlist.");
 
-        if (!response.ok) {
-          throw "Failed to remove sneaker.";
-        }
+        await response.json();
 
-        const data = await response.json();
-        console.log("Sneaker removed from wishlist", data);
+        setWishlistData((prev) =>
+          prev.filter((item) => item._id !== exists._id)
+        );
+        setIsWishlisted(false);
+        setToastMessage("Sneaker removed from wishlist!");
+        console.log(" Sneaker removed from wishlist");
 
-        setWishlist((prev) => prev.filter((item) => item._id !== exists._id));
         return;
       }
 
@@ -61,25 +79,31 @@ const SneakerPage = () => {
         "https://kicks-culture-backend.vercel.app/sneakers/wishlist",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userId: "69178123a154f88538f56d4e",
             sneakerId: allSneakerData._id,
           }),
         }
       );
-      if (!response.ok) {
-        throw "Failed to add sneaker.";
-      }
+
+      if (!response.ok) throw new Error("Failed to add sneaker to wishlist.");
+
       const data = await response.json();
-      console.log("Sneaker added to the wishlist", data);
-      setWishlist((prev) => [...prev, allSneakerData]);
+
+      setWishlistData((prev) => {
+        const alreadyInList = prev.some(
+          (item) => item.sneakerId?._id === allSneakerData._id
+        );
+        if (alreadyInList) return prev;
+        return [...prev, data];
+      });
 
       setIsWishlisted(true);
+      setToastMessage("Sneaker added to wishlist!");
+      console.log("Sneaker added to wishlist:", data);
     } catch (error) {
-      console.log("Error in adding the sneaker in wishlist", error);
+      console.error("Error handling wishlist:", error);
     }
   };
 
@@ -90,9 +114,6 @@ const SneakerPage = () => {
     const exists = cart.find(
       (sneaker) => sneaker.sneakerId?._id === allSneakerData._id
     );
-    if (!exists) {
-      setCart((prev) => [...prev, allSneakerData]);
-    }
 
     try {
       const response = await fetch(
@@ -116,6 +137,17 @@ const SneakerPage = () => {
       const data = await response.json();
 
       console.log("Added Sneaker", data);
+
+      const newCartItem = {
+        userId: "69178123a154f88538f56d4e",
+        sneakerId: allSneakerData,
+        quantity: 1,
+        size,
+      };
+
+      setCart((prev) => [...prev, newCartItem]);
+      showToast("Sneaker added to cart!");
+      setAddedToCart(true);
     } catch (error) {
       console.log(error);
     }
@@ -240,8 +272,18 @@ const SneakerPage = () => {
                       className="btn btn-dark p-3"
                       type="button"
                       onClick={handleCart}
+                      id="liveToastBtn"
                     >
-                      Add to cart
+                      {addedToCart ? (
+                        <Link
+                          to="/cart"
+                          className="text-decoration-none hover-text-primary text-light"
+                        >
+                          Go to cart
+                        </Link>
+                      ) : (
+                        "Add to Cart"
+                      )}
                     </button>
                   </div>
                   <div className="d-grid gap-2 mt-4">
@@ -435,6 +477,27 @@ const SneakerPage = () => {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div
+          id="liveToast"
+          class="toast"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div class="toast-header">
+            <strong class="me-auto">Bootstrap</strong>
+            <small>11 mins ago</small>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="toast-body">{toastMessage}</div>
         </div>
       </div>
     </>
