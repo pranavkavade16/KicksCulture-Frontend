@@ -156,6 +156,13 @@ const ProfilePage = () => {
                         </p>
                         <p className="card-text">{address.mobileNumber}</p>
                       </div>
+                      <div className="card-footer p-0">
+                        <div className="d-flex w-100">
+                          <button className="btn w-100 py-2 text-center fw-semibold text-danger rounded-0">
+                            Delete
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

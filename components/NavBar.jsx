@@ -113,7 +113,7 @@ const NavBar = () => {
           </div>
         </div>
       </div>
-      // navbar for mobile
+      {/* {NavBar for mobile version} */}
       <nav className="navbar navbar-dark bg-dark d-lg-none px-3">
         <NavLink
           className="navbar-brand fw-bold"
