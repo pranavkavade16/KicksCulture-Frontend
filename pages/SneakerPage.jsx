@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import ProductList from "../components/ProductList";
 import useSneakersContext from "../context/SneakersContext";
+import Toast from "../components/Toast";
 import { useState, useEffect } from "react";
 import * as bootstrap from "bootstrap";
 
@@ -37,14 +38,6 @@ const SneakerPage = () => {
       setIsWishlisted(exists);
     }
   }, [wishlistData, allSneakerData]);
-
-  const showToast = (message) => {
-    setToastMessage(message);
-    const toastLiveExample = document.getElementById("liveToast");
-    const toastBootstrap =
-      bootstrap.Toast.getOrCreateInstance(toastLiveExample);
-    toastBootstrap.show();
-  };
 
   const handleWishlist = async () => {
     try {
@@ -146,7 +139,8 @@ const SneakerPage = () => {
       };
 
       setCart((prev) => [...prev, newCartItem]);
-      showToast("Sneaker added to cart!");
+      setToastMessage("Sneaker added to cart!");
+
       setAddedToCart(true);
     } catch (error) {
       console.log(error);
@@ -479,27 +473,7 @@ const SneakerPage = () => {
           </div>
         </div>
       </div>
-      <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div
-          id="liveToast"
-          class="toast"
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-        >
-          <div class="toast-header">
-            <strong class="me-auto">Bootstrap</strong>
-            <small>11 mins ago</small>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="toast"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="toast-body">{toastMessage}</div>
-        </div>
-      </div>
+      <Toast title={allSneakerData?.sneakerName} toastMessage={toastMessage} />
     </>
   );
 };

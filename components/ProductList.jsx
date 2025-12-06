@@ -1,12 +1,38 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useSneakersContext from "../context/SneakersContext";
 import * as bootstrap from "bootstrap";
+import Toast from "./Toast";
 const ProductList = ({ data, loading, error }) => {
   const [productSize, setProductSize] = useState();
   const [selectedSneaker, setSelectedSneaker] = useState(null);
+  const [toastMessage, setToastMessage] = useState("");
   const { cart, setCart, wishlistData, setWishlistData } = useSneakersContext();
   console.log(selectedSneaker);
+
+  useEffect(() => {
+    const handleModalHidden = () => {
+      document.body.classList.remove("modal-open");
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+      document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
+    };
+
+    const modalEl = document.getElementById("exampleModal");
+    modalEl?.addEventListener("hidden.bs.modal", handleModalHidden);
+
+    return () => {
+      modalEl?.removeEventListener("hidden.bs.modal", handleModalHidden);
+      handleModalHidden();
+    };
+  }, []);
+
+  const closeModal = () => {
+    const modalEl = document.getElementById("exampleModal");
+    if (!modalEl || !window.bootstrap) return;
+    const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
+    modalInstance?.hide();
+  };
 
   const handleWishlist = async (sneaker) => {
     try {
@@ -36,6 +62,7 @@ const ProductList = ({ data, loading, error }) => {
       }
       const data = await response.json();
       console.log("Sneaker added to the wishlist", data);
+      setToastMessage("Sneaker added to wishlist!");
 
       const wishlistItem = {
         userId: "69178123a154f88538f56d4e",
@@ -56,7 +83,7 @@ const ProductList = ({ data, loading, error }) => {
       (sneaker) => sneaker.sneakerId?._id === selectedSneaker._id
     );
     if (exists) {
-      alert("Sneaker already in cart");
+      setToastMessage("Sneaker already in cart!");
       return;
     }
 
@@ -92,21 +119,12 @@ const ProductList = ({ data, loading, error }) => {
 
       setCart((prev) => [...prev, newCartItem]);
 
-      setTimeout(() => {
-        const modalEl = document.getElementById("exampleModal");
-        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-        if (modalInstance) {
-          modalInstance.hide();
-        }
+      // const modalEl = document.getElementById("exampleModal");
+      // const modalInstance = bootstrap.Modal.getInstance(modalEl);
+      // if (modalInstance) modalInstance.hide();
+      setToastMessage("Sneaker added to cart!");
 
-        document
-          .querySelectorAll(".modal-backdrop")
-          .forEach((el) => el.remove());
-        document.body.classList.remove("modal-open");
-        document.body.style.overflow = "auto";
-        document.body.style.paddingRight = "0";
-        console.log("Sneaker added to cart successfully!");
-      }, 200);
+      closeModal();
     } catch (error) {
       console.log(error);
     }
@@ -184,26 +202,26 @@ const ProductList = ({ data, loading, error }) => {
         </div>
       </div>
       <div
-        class="modal fade"
+        className="modal fade"
         id="exampleModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="exampleModalLabel">
                 {selectedSneaker?.sneakerName}
               </h1>
               <button
                 type="button"
-                class="btn-close"
+                className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
             </div>
-            <div class="modal-body">
+            <div className="modal-body">
               <div className="row">
                 <div className="col">
                   <img
@@ -240,17 +258,17 @@ const ProductList = ({ data, loading, error }) => {
                 </div>
               </div>
             </div>
-            <div class="modal-footer">
+            <div className="modal-footer">
               <button
                 type="button"
-                class="btn btn-secondary"
+                className="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
                 Close
               </button>
               <button
                 type="button"
-                class="btn btn-primary"
+                className="btn btn-primary"
                 onClick={handleCart}
               >
                 Add to cart
@@ -259,6 +277,7 @@ const ProductList = ({ data, loading, error }) => {
           </div>
         </div>
       </div>
+      <Toast title={selectedSneaker?.sneakerName} toastMessage={toastMessage} />
     </div>
   );
 };

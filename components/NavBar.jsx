@@ -4,7 +4,7 @@ import useSneakersContext from "../context/SneakersContext";
 import { useEffect, useState } from "react";
 
 const NavBar = () => {
-  const { cartData, wishlistData } = useSneakersContext();
+  const { cartData = [], wishlistData = [] } = useSneakersContext();
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
 
@@ -113,11 +113,8 @@ const NavBar = () => {
           </div>
         </div>
       </div>
-      {/* -------------------- MOBILE NAVBAR (HAMBURGER) -------------------- */}
+      // navbar for mobile
       <nav className="navbar navbar-dark bg-dark d-lg-none px-3">
-        {" "}
-        {/* Only show on mobile */}
-        {/* MOBILE BRAND */}
         <NavLink
           className="navbar-brand fw-bold"
           to="/"
@@ -125,7 +122,7 @@ const NavBar = () => {
         >
           KicksCulture
         </NavLink>
-        {/* HAMBURGER TOGGLE */}
+
         <button
           className="navbar-toggler"
           type="button"
@@ -134,7 +131,7 @@ const NavBar = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        {/* COLLAPSIBLE LINKS */}
+
         <div className="collapse navbar-collapse mt-3" id="mobileNav">
           <ul className="navbar-nav">
             <li className="nav-item">
@@ -162,9 +159,7 @@ const NavBar = () => {
             </li>
           </ul>
 
-          {/* MOBILE ICONS */}
           <div className="d-flex gap-4 mt-3">
-            {/* SEARCH */}
             <i
               className="bi bi-search fs-4"
               type="button"
@@ -174,31 +169,28 @@ const NavBar = () => {
               <Search />
             </i>
 
-            {/* WISHLIST */}
             <div className="position-relative">
               <NavLink to="/wishlist" className="text-white fs-4">
                 <i className="bi bi-bag-heart"></i>
               </NavLink>
-              {wishlist.length > 0 && (
+              {wishlist?.length > 0 && (
                 <span className="badge bg-danger position-absolute top-0 start-100 translate-middle">
-                  {wishlist.length}
+                  {wishlist?.length}
                 </span>
               )}
             </div>
 
-            {/* PROFILE */}
             <NavLink to="/profilePage" className="text-white fs-4">
               <i className="bi bi-person-circle"></i>
             </NavLink>
 
-            {/* CART */}
             <div className="position-relative">
               <NavLink to="/cart" className="text-white fs-4">
                 <i className="bi bi-cart"></i>
               </NavLink>
-              {cart.length > 0 && (
+              {cart?.length > 0 && (
                 <span className="badge bg-danger position-absolute top-0 start-100 translate-middle">
-                  {cart.length}
+                  {cart?.length}
                 </span>
               )}
             </div>
