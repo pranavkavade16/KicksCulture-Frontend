@@ -11,33 +11,15 @@ const SortBy = ({ onSortChange }) => {
   return (
     <div>
       <div className="dropdown">
-        <button
+        <select
+          name=""
+          id="sortBy"
+          onChange={(event) => handleChange(event.target.value)}
           className="btn btn-secondary dropdown-toggle btn-sm"
-          type="button"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
         >
-          {sortBy}
-        </button>
-        <ul className="dropdown-menu">
-          <li>
-            <button
-              className="dropdown-item"
-              onClick={() => handleChange("lowToHigh")}
-            >
-              Price, low to high
-            </button>
-          </li>
-
-          <li>
-            <button
-              className="dropdown-item"
-              onClick={() => handleChange("highToLow")}
-            >
-              Price, high to low
-            </button>
-          </li>
-        </ul>
+          <option value="lowToHigh">Low to High</option>
+          <option value="highToLow">High to Low</option>
+        </select>
       </div>
     </div>
   );
