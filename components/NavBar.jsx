@@ -1,19 +1,9 @@
 import { NavLink } from "react-router-dom";
 import Search from "./Search";
 import useSneakersContext from "../context/SneakersContext";
-import { useEffect, useState } from "react";
-
+import { useEffect, useMemo, useState } from "react";
 const NavBar = () => {
-  const { cartData = [], wishlistData = [] } = useSneakersContext();
-  const [cart, setCart] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
-
-  useEffect(() => {
-    if (cartData || wishlistData) {
-      setCart(cartData);
-      setWishlist(wishlistData);
-    }
-  }, [cartData, wishlistData]);
+  const { cart, wishlistData } = useSneakersContext();
 
   return (
     <header className="bg-dark text-light">
@@ -81,12 +71,12 @@ const NavBar = () => {
               <NavLink to="/wishlist" style={{ color: "white" }}>
                 <i className="bi bi-bag-heart"></i>
               </NavLink>
-              {wishlist?.length > 0 ? (
+              {wishlistData?.length > 0 ? (
                 <span
                   className="position-absolute top-10 start-90 translate-middle badge rounded-pill bg-danger"
                   style={{ fontSize: "0.6rem", padding: "0.2em 0.4em" }}
                 >
-                  {wishlist?.length}
+                  {wishlistData?.length}
                   <span className="visually-hidden">unread messages</span>
                 </span>
               ) : null}
@@ -122,7 +112,6 @@ const NavBar = () => {
         >
           KicksCulture
         </NavLink>
-
         <button
           className="navbar-toggler"
           type="button"
@@ -131,7 +120,6 @@ const NavBar = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-
         <div className="collapse navbar-collapse mt-3" id="mobileNav">
           <ul className="navbar-nav">
             <li className="nav-item">
@@ -139,26 +127,22 @@ const NavBar = () => {
                 New Arrival
               </NavLink>
             </li>
-
             <li className="nav-item">
               <NavLink className="nav-link text-white" to="/allSneakers">
                 Sneakers
               </NavLink>
             </li>
-
             <li className="nav-item">
               <NavLink className="nav-link text-white" to="/cart">
                 Cart
               </NavLink>
             </li>
-
             <li className="nav-item">
               <NavLink className="nav-link text-white" to="/about">
                 About
               </NavLink>
             </li>
           </ul>
-
           <div className="d-flex gap-4 mt-3">
             <i
               className="bi bi-search fs-4"
@@ -168,22 +152,19 @@ const NavBar = () => {
             >
               <Search />
             </i>
-
             <div className="position-relative">
               <NavLink to="/wishlist" className="text-white fs-4">
                 <i className="bi bi-bag-heart"></i>
               </NavLink>
-              {wishlist?.length > 0 && (
+              {wishlistData?.length > 0 && (
                 <span className="badge bg-danger position-absolute top-0 start-100 translate-middle">
-                  {wishlist?.length}
+                  {wishlistData?.length}
                 </span>
               )}
             </div>
-
             <NavLink to="/profilePage" className="text-white fs-4">
               <i className="bi bi-person-circle"></i>
             </NavLink>
-
             <div className="position-relative">
               <NavLink to="/cart" className="text-white fs-4">
                 <i className="bi bi-cart"></i>
@@ -200,5 +181,4 @@ const NavBar = () => {
     </header>
   );
 };
-
 export default NavBar;

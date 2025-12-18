@@ -10,11 +10,9 @@ const SideBar = ({ onFilterChange, filters, clearFilters }) => {
   const allBrands = [
     ...new Set(sneakersData?.flatMap((sneaker) => sneaker.brand)),
   ];
-
   const gender = [
     ...new Set(sneakersData?.flatMap((sneakersData) => sneakersData.gender)),
   ];
-
   return (
     <div>
       <a
@@ -65,7 +63,7 @@ const SideBar = ({ onFilterChange, filters, clearFilters }) => {
                 data-bs-parent="#accordionFlushExample"
               >
                 <div className="accordion-body">
-                  {allSizes.map((size) => (
+                  {allSizes?.map((size) => (
                     <div key={size}>
                       <div className="form-check">
                         <input
@@ -107,7 +105,7 @@ const SideBar = ({ onFilterChange, filters, clearFilters }) => {
                 data-bs-parent="#accordionFlushExample"
               >
                 <div className="accordion-body">
-                  {allBrands.map((brand) => (
+                  {allBrands?.map((brand) => (
                     <div>
                       <div className="form-check">
                         <input
@@ -149,7 +147,7 @@ const SideBar = ({ onFilterChange, filters, clearFilters }) => {
                 data-bs-parent="#accordionFlushExample"
               >
                 <div className="accordion-body">
-                  {gender.map((gender) => (
+                  {gender?.map((gender) => (
                     <div>
                       <div className="form-check">
                         <input
@@ -204,7 +202,6 @@ const SideBar = ({ onFilterChange, filters, clearFilters }) => {
                       1.0 to 5.0
                     </label>
                   </div>
-
                   <div className="form-check">
                     <input
                       className="form-check-input"
@@ -218,7 +215,6 @@ const SideBar = ({ onFilterChange, filters, clearFilters }) => {
                       2.0 to 5.0
                     </label>
                   </div>
-
                   <div className="form-check">
                     <input
                       className="form-check-input"
@@ -232,7 +228,6 @@ const SideBar = ({ onFilterChange, filters, clearFilters }) => {
                       3.0 to 5.0
                     </label>
                   </div>
-
                   <div className="form-check">
                     <input
                       className="form-check-input"

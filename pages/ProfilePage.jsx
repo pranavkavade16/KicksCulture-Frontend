@@ -12,6 +12,27 @@ const ProfilePage = () => {
   );
   console.log(addressData);
 
+  const handleAddressDelete = async (addressId) => {
+    try {
+      const response = await fetch(
+        `https://kicks-culture-backend.vercel.app/address/delete/${addressId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        console.log("Failed to delete the address.");
+        return;
+      }
+
+      const data = await response.json();
+      console.log("Address deleted successfully:", data);
+    } catch (error) {
+      console.log("Error in deleting the address.", error);
+    }
+  };
+
   if (loading)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
@@ -158,7 +179,10 @@ const ProfilePage = () => {
                       </div>
                       <div className="card-footer p-0">
                         <div className="d-flex w-100">
-                          <button className="btn w-100 py-2 text-center fw-semibold text-danger rounded-0">
+                          <button
+                            className="btn w-100 py-2 text-center fw-semibold text-danger rounded-0"
+                            onClick={() => handleAddressDelete(address._id)}
+                          >
                             Delete
                           </button>
                         </div>

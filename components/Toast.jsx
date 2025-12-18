@@ -4,33 +4,33 @@ import * as bootstrap from "bootstrap";
 const Toast = ({ title, toastMessage }) => {
   useEffect(() => {
     if (toastMessage) {
-      const toastLiveExample = document.getElementById("liveToast");
-      const toastBootstrap =
-        bootstrap.Toast.getOrCreateInstance(toastLiveExample);
-      toastBootstrap.show();
+      const toastEl = document.getElementById("liveToast");
+      if (toastEl) {
+        const toast = bootstrap.Toast.getOrCreateInstance(toastEl);
+        toast.show();
+      }
     }
   }, [toastMessage]);
 
   return (
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div className="toast-container position-fixed bottom-0 end-0 p-3">
       <div
         id="liveToast"
-        class="toast"
+        className="toast"
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
       >
-        <div class="toast-header">
-          <strong class="me-auto">{title}</strong>
-          <small></small>
+        <div className="toast-header">
+          <strong className="me-auto">{title}</strong>
           <button
             type="button"
-            class="btn-close"
+            className="btn-close"
             data-bs-dismiss="toast"
             aria-label="Close"
           ></button>
         </div>
-        <div class="toast-body">{toastMessage}</div>
+        <div className="toast-body">{toastMessage}</div>
       </div>
     </div>
   );

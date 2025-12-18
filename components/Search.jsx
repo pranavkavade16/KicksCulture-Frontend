@@ -10,25 +10,21 @@ const Search = () => {
   } = useFetch("https://kicks-culture-backend.vercel.app/sneakers");
 
   const getFilteredData = () => {
-    let filtered;
-    if (!Array.isArray(sneakersData)) {
-      filtered = [];
-      return filtered;
+    let filtered = sneakersData;
+    if (search || search.length > 0) {
+      filtered = sneakersData.filter(
+        (sneaker) =>
+          sneaker.brand.toLowerCase().includes(search.toLowerCase()) ||
+          sneaker.colors.toLowerCase().includes(search.toLowerCase()) ||
+          sneaker.description.toLowerCase().includes(search.toLowerCase()) ||
+          sneaker.sneakerName.toLowerCase().includes(search.toLowerCase())
+      );
     }
-    if (search.trim() === "") {
-      filtered = sneakersData;
-      return filtered;
-    }
-
-    filtered = sneakersData.filter(
-      (sneaker) =>
-        sneaker.brand.toLowerCase().includes(search.toLowerCase()) ||
-        sneaker.colors.toLowerCase().includes(search.toLowerCase()) ||
-        sneaker.description.toLowerCase().includes(search.toLowerCase()) ||
-        sneaker.sneakerName.toLowerCase().includes(search.toLowerCase())
-    );
-
     return filtered;
+  };
+
+  const handleSearch = (searchValue) => {
+    setSearch(searchValue);
   };
 
   const filteredData = getFilteredData();
@@ -36,30 +32,26 @@ const Search = () => {
   return (
     <div>
       <div
-        className="offcanvas offcanvas-end"
+        class="offcanvas offcanvas-end"
         tabindex="-1"
         id="offcanvasRight"
         aria-labelledby="offcanvasRightLabel"
       >
-        <div className="offcanvas-header">
-          <h5 className="offcanvas-title" id="offcanvasRightLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasRightLabel">
             Search Sneakers...
           </h5>
           <button
             type="button"
-            className="btn-close"
+            class="btn-close"
             data-bs-dismiss="offcanvas"
             aria-label="Close"
           ></button>
         </div>
-        <div className="offcanvas-body">
-          <form
-            className="d-flex"
-            role="search"
-            onSubmit={(e) => e.preventDefault()}
-          >
+        <div class="offcanvas-body">
+          <form class="d-flex" role="search">
             <input
-              className="form-control me-2"
+              class="form-control me-2"
               type="search"
               placeholder="Search"
               aria-label="Search"
@@ -67,19 +59,32 @@ const Search = () => {
             />
           </form>
 
-          <div className="offcanvas-body  justify-content-center align-items-center">
-            {filteredData?.map((sneaker) => (
-              <div className="card m-3" style={{ width: "19rem" }}>
-                <img src={sneaker.image1Url} class="card-img-top" alt="..." />
-                <div className="card-body">
-                  <p className="card-text">
-                    <strong>{sneaker.sneakerName}</strong>
-                  </p>
+          <div className="offcanvas-body justify-content-center align-items-center">
+            {search ? (
+              filteredData?.map((sneaker) => (
+                <div key={sneaker._id}>
+                  <a
+                    href={`/sneakerPage/${sneaker._id}`}
+                    className="text-decoration-none text-dark hover-text-primary"
+                  >
+                    <div class="card m-3" style={{ width: "19rem" }}>
+                      <img
+                        src={sneaker.image1Url}
+                        class="card-img-top"
+                        alt="..."
+                      />
+                      <div class="card-body">
+                        <p class="card-text">{sneaker.sneakerName}</p>
+                      </div>
+                    </div>
+                  </a>
                 </div>
-              </div>
-            ))}
-            {filteredData.length === 0 && (
-              <p className="text-center">No sneakers found.</p>
+              ))
+            ) : (
+              <p className="fw-medium text-danger">
+                Search by brand, style, color, size, or price… Find your perfect
+                sneakers!
+              </p>
             )}
           </div>
         </div>

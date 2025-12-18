@@ -9,7 +9,7 @@ const ProductList = ({ data, loading, error }) => {
   const [toastMessage, setToastMessage] = useState("");
   const { cart, setCart, wishlistData, setWishlistData } = useSneakersContext();
   console.log(selectedSneaker);
-
+  console.log(productSize);
   useEffect(() => {
     const handleModalHidden = () => {
       document.body.classList.remove("modal-open");
@@ -17,23 +17,19 @@ const ProductList = ({ data, loading, error }) => {
       document.body.style.paddingRight = "";
       document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
     };
-
     const modalEl = document.getElementById("exampleModal");
     modalEl?.addEventListener("hidden.bs.modal", handleModalHidden);
-
     return () => {
       modalEl?.removeEventListener("hidden.bs.modal", handleModalHidden);
       handleModalHidden();
     };
   }, []);
-
   const closeModal = () => {
     const modalEl = document.getElementById("exampleModal");
     if (!modalEl || !window.bootstrap) return;
     const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
     modalInstance?.hide();
   };
-
   const handleWishlist = async (sneaker) => {
     try {
       const exists = wishlistData.find(
@@ -63,30 +59,30 @@ const ProductList = ({ data, loading, error }) => {
       const data = await response.json();
       console.log("Sneaker added to the wishlist", data);
       setToastMessage("Sneaker added to wishlist!");
-
       const wishlistItem = {
         userId: "69178123a154f88538f56d4e",
         sneakerId: sneaker,
       };
       setWishlistData((prev) => [...prev, wishlistItem]);
+      setWishlisted(true);
     } catch (error) {
       console.log("Error in adding the sneaker in wishlist", error);
     }
   };
-
   const handleCart = async () => {
     if (!productSize) {
       alert("Please select your size");
       return;
     }
     const exists = cart?.find(
-      (sneaker) => sneaker.sneakerId?._id === selectedSneaker._id
+      (sneaker) =>
+        sneaker.sneakerId?._id === selectedSneaker._id &&
+        sneaker?.size === productSize
     );
     if (exists) {
       setToastMessage("Sneaker already in cart!");
       return;
     }
-
     try {
       const response = await fetch(
         "https://kicks-culture-backend.vercel.app/sneakers/cart",
@@ -107,49 +103,41 @@ const ProductList = ({ data, loading, error }) => {
         throw "Failed to add sneaker.";
       }
       const data = await response.json();
-
       console.log("Added Sneaker", data);
-
       const newCartItem = {
         userId: "69178123a154f88538f56d4e",
         sneakerId: selectedSneaker,
         quantity: 1,
         size: productSize,
       };
-
       setCart((prev) => [...prev, newCartItem]);
 
-      // const modalEl = document.getElementById("exampleModal");
-      // const modalInstance = bootstrap.Modal.getInstance(modalEl);
-      // if (modalInstance) modalInstance.hide();
       setToastMessage("Sneaker added to cart!");
-
       closeModal();
     } catch (error) {
       console.log(error);
     }
   };
-
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!data) return <p>No data available</p>;
-
   return (
     <div className="">
-      <div className="m-4">
-        <div className="row row-cols-1 row-cols-md-4 g-4">
+      <div className="m-3">
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g4">
           {data?.map((sneaker) => (
-            <div key={sneaker._id}>
+            <div key={sneaker._id} className="mt-4">
               <div className="col">
-                <div className="card" style={{ height: "510px" }}>
+                <div className="card h-100  d-flex flex-column">
                   <Link
                     to={`/sneakerPage/${sneaker._id}`}
                     className="text-decoration-none text-dark hover-text-primary"
                   >
                     <img
                       src={sneaker.image1Url}
-                      className="card-img-top"
+                      className="card-img-top img-fluid"
                       alt="sneakerPhoto"
+                      style={{ objectFit: "cover" }}
                     />
                   </Link>
                   <div className="card-body">
@@ -162,16 +150,28 @@ const ProductList = ({ data, loading, error }) => {
                       to={`/sneakerPage/${sneaker._id}`}
                       className="text-decoration-none text-dark hover-text-primary"
                     >
-                      <h5 className="card-title">{sneaker.sneakerName}</h5>
+                      <h5
+                        className="card-title"
+                        style={{
+                          minHeight: "48px",
+                        }}
+                      >
+                        {sneaker.sneakerName.slice(0, 35)}
+                      </h5>
                     </Link>
                     <p className="card-text">
                       <small className="text-body-secondary">
-                        {sneaker.colors}
+                        {sneaker.colors.slice(0, 30)}
                       </small>
                     </p>
                     <p className="card-text">₹{sneaker.price}</p>
+                    <span>
+                      Rating: {sneaker.rating}{" "}
+                      <i className="bi bi-star-fill"></i>
+                    </span>
                   </div>
-                  <div className="card-footer p-0">
+
+                  <div className="card-footer p-0 mt-auto">
                     <div className="d-flex w-100">
                       <button
                         className="btn w-50 py-3 text-center fw-semibold text-danger rounded-0"
@@ -184,14 +184,18 @@ const ProductList = ({ data, loading, error }) => {
                       >
                         Add to cart
                       </button>
-
                       <button
                         className="btn w-50 py-3 text-center fw-semibold text-primary rounded-0"
                         onClick={() => {
                           handleWishlist(sneaker);
+                          setSelectedSneaker(sneaker);
                         }}
                       >
-                        Wishlist
+                        {wishlistData.find(
+                          (item) => item.sneakerId?._id === sneaker._id
+                        )
+                          ? "Wishlisted❤️"
+                          : "Wishlist"}
                       </button>
                     </div>
                   </div>
@@ -223,14 +227,14 @@ const ProductList = ({ data, loading, error }) => {
             </div>
             <div className="modal-body">
               <div className="row">
-                <div className="col">
+                <div className="col-12 col-md-6">
                   <img
                     src={selectedSneaker?.image1Url}
                     alt="sneakerPhoto"
-                    className="w-75"
+                    className="w-75 img-fluid"
                   />
                 </div>
-                <div className="col">
+                <div className="col-12 col-md-6 mt-3 mt-md-0">
                   <h6>{selectedSneaker?.sneakerName}</h6>
                   <p>MRP: {selectedSneaker?.price}</p>
                   <span>Select Size: </span> <br />
@@ -244,7 +248,7 @@ const ProductList = ({ data, loading, error }) => {
                           id={`size-${selectedSneaker?._id}-${size}`}
                           autoComplete="off"
                           value={size}
-                          onChange={() => setProductSize(size)}
+                          onChange={() => setProductSize(event.target.value)}
                         />
                         <label
                           className="btn btn-outline-dark btn-sm"
@@ -281,5 +285,4 @@ const ProductList = ({ data, loading, error }) => {
     </div>
   );
 };
-
 export default ProductList;

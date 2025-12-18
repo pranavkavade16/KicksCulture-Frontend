@@ -10,7 +10,7 @@ const SortBy = ({ onSortChange }) => {
   };
   return (
     <div>
-      <div class="dropdown">
+      <div className="dropdown">
         <button
           className="btn btn-secondary dropdown-toggle btn-sm"
           type="button"
@@ -19,7 +19,7 @@ const SortBy = ({ onSortChange }) => {
         >
           {sortBy}
         </button>
-        <ul class="dropdown-menu">
+        <ul className="dropdown-menu">
           <li>
             <button
               className="dropdown-item"
@@ -28,6 +28,7 @@ const SortBy = ({ onSortChange }) => {
               Price, low to high
             </button>
           </li>
+
           <li>
             <button
               className="dropdown-item"
