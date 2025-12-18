@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import useFetch from "../customHooks/useFetch";
-import useSneakersContext from "../context/SneakersContext";
+import { useEffect, useState } from 'react';
+import useFetch from '../customHooks/useFetch';
+import useSneakersContext from '../context/SneakersContext';
 const Checkout = () => {
-  const [selectedId, setSelectedId] = useState("");
+  const [selectedId, setSelectedId] = useState('');
   const [order, setOrder] = useState();
   const [orderPlaced, setOrderPlaced] = useState(false);
   const {
@@ -11,13 +11,19 @@ const Checkout = () => {
     loading: cartLoading,
 
     error: cartError,
-  } = useFetch("https://kicks-culture-backend.vercel.app/sneakers/cart");
+  } = useFetch('https://kicks-culture-backend.vercel.app/sneakers/cart');
 
-  const { data: addressData } = useFetch(
-    "https://kicks-culture-backend.vercel.app/address"
+  const { data: rawAddressData } = useFetch(
+    'https://kicks-culture-backend.vercel.app/address'
   );
 
   const { cart, setCart } = useSneakersContext();
+
+  const addressData = Array.isArray(rawAddressData)
+    ? rawAddressData
+    : Array.isArray(rawAddressData?.address)
+    ? rawAddressData.address
+    : [];
 
   useEffect(() => {
     if (Array.isArray(cartData)) {
@@ -27,14 +33,6 @@ const Checkout = () => {
     }
   }, [cartData]);
   console.log(order);
-
-  // const totalPrice = order?.map((order) =>
-  //   order.items.reduce(
-  //     (acc, curr) => acc + curr.quantity * curr.sneakerId.price,
-  //     0
-  //   )
-  // );
-  // console.log(totalPrice);
 
   const subTotal = Array.isArray(cartData)
     ? cartData?.reduce(
@@ -48,32 +46,32 @@ const Checkout = () => {
       const response = await fetch(
         `https://kicks-culture-backend.vercel.app/sneakers/cart/empty/69178123a154f88538f56d4e`,
         {
-          method: "DELETE",
+          method: 'DELETE',
         }
       );
 
       if (!response.ok) {
-        throw "Failed to empty the cart";
+        throw 'Failed to empty the cart';
       }
       const updatedData = await response.json();
       setCart([]);
-      console.log("updated Cart", cart);
+      console.log('updated Cart', cart);
 
-      console.log("Deleted successfully:", updatedData);
+      console.log('Deleted successfully:', updatedData);
     } catch (error) {
-      console.log("Error in empting the cart", error);
+      console.log('Error in empting the cart', error);
     }
   };
 
   const handleOrder = async () => {
     try {
       if (!selectedId) {
-        alert("Please select an address before placing the order.");
+        alert('Please select an address before placing the order.');
         return;
       }
 
       if (!Array.isArray(order) || order.length === 0) {
-        alert("Cart is empty!!");
+        alert('Cart is empty!!');
         return;
       }
 
@@ -89,24 +87,24 @@ const Checkout = () => {
       };
 
       const response = await fetch(
-        "https://kicks-culture-backend.vercel.app/sneakers/order",
+        'https://kicks-culture-backend.vercel.app/sneakers/order',
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         }
       );
       console.log(response);
       if (!response.ok) {
         const err = await response.text();
-        console.error("Server response:", err);
-        throw new Error("Error in placing the order.");
+        console.error('Server response:', err);
+        throw new Error('Error in placing the order.');
       }
 
       const placedOrder = await response.json();
-      console.log("Order placed", placedOrder);
+      console.log('Order placed', placedOrder);
 
-      console.log("Order placed successfully", placedOrder);
+      console.log('Order placed successfully', placedOrder);
 
       handleEmptyCart();
       setOrderPlaced(!orderPlaced);
@@ -135,63 +133,81 @@ const Checkout = () => {
               <div className="row">
                 <div className="col-12 col-lg-6 mt-3">
                   <h4>Select Address</h4>
-                  <div className="row row-cols-1 row-cols-sm-2 g-3">
-                    {addressData?.map((address) => {
-                      const id = address._id;
-                      const checked = selectedId === id;
-
-                      return (
-                        <div key={id} className="col">
-                          <input
-                            type="radio"
-                            className="btn-check"
-                            name={address}
-                            id={`card-${id}`}
-                            checked={selectedId === id}
-                            value={id}
-                            onChange={() => setSelectedId(id)}
-                          />
-
-                          <label
-                            htmlFor={`card-${id}`}
-                            className={`card h-100 ${
-                              checked ? "border-primary" : ""
-                            }`}
-                            style={{ cursor: "pointer" }}
+                  <div className="row d-flex justify-content-center">
+                    {addressData?.length === 0 ? (
+                      <div className="col d-flex justify-content-center justify-content-sm-start">
+                        <a href="/addAddress">
+                          <div
+                            className="card"
+                            style={{ width: '300px', height: '255px' }}
                           >
-                            <div className="card-body">
-                              <h5 className="card-title mb-2">
-                                {address.firstName} {address.lastName}
-                              </h5>
-                              <p className="card-text mb-1">
-                                {address.flatNumber}, {address.completeAddress}
-                              </p>
-                              <p className="card-text mb-0">
-                                <small className="text-muted">
-                                  Mobile: {address.mobileNumber}
-                                </small>
-                              </p>
+                            <div className="card-body d-flex justify-content-center align-items-center">
+                              Add New Address
                             </div>
+                          </div>
+                        </a>
+                      </div>
+                    ) : (
+                      <div>
+                        {addressData?.map((address) => {
+                          const id = address._id;
+                          const checked = selectedId === id;
 
-                            <div
-                              className={`card-footer py-2 ${
-                                checked ? "bg-primary-subtle" : ""
-                              }`}
-                            >
-                              <span
-                                className={
-                                  checked
-                                    ? "text-primary fw-semibold"
-                                    : "text-muted"
-                                }
+                          return (
+                            <div key={id} className="col">
+                              <input
+                                type="radio"
+                                className="btn-check"
+                                name={address}
+                                id={`card-${id}`}
+                                checked={selectedId === id}
+                                value={id}
+                                onChange={() => setSelectedId(id)}
+                              />
+
+                              <label
+                                htmlFor={`card-${id}`}
+                                className={`card h-100 ${
+                                  checked ? 'border-primary' : ''
+                                }`}
+                                style={{ cursor: 'pointer' }}
                               >
-                                {checked ? "Selected" : "Click to select"}
-                              </span>
+                                <div className="card-body">
+                                  <h5 className="card-title mb-2">
+                                    {address.firstName} {address.lastName}
+                                  </h5>
+                                  <p className="card-text mb-1">
+                                    {address.flatNumber},{' '}
+                                    {address.completeAddress}
+                                  </p>
+                                  <p className="card-text mb-0">
+                                    <small className="text-muted">
+                                      Mobile: {address.mobileNumber}
+                                    </small>
+                                  </p>
+                                </div>
+
+                                <div
+                                  className={`card-footer py-2 ${
+                                    checked ? 'bg-primary-subtle' : ''
+                                  }`}
+                                >
+                                  <span
+                                    className={
+                                      checked
+                                        ? 'text-primary fw-semibold'
+                                        : 'text-muted'
+                                    }
+                                  >
+                                    {checked ? 'Selected' : 'Click to select'}
+                                  </span>
+                                </div>
+                              </label>
                             </div>
-                          </label>
-                        </div>
-                      );
-                    })}
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="col-12 col-lg-6 mt-3">
