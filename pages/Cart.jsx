@@ -1,12 +1,21 @@
+import { Link } from "react-router-dom";
 import useFetch from "../customHooks/useFetch";
+import Toast from "../components/Toast";
 import { useEffect, useState } from "react";
+import useSneakersContext from "../context/SneakersContext";
+
 const Cart = () => {
-  const [cart, setCart] = useState([]);
+  const [toastMessage, setToastMessage] = useState("");
+  const { cart, setCart } = useSneakersContext();
+
   const {
     data: cartData,
+
     loading: cartLoading,
+
     error: cartError,
   } = useFetch("https://kicks-culture-backend.vercel.app/sneakers/cart");
+
   console.log(cartData);
 
   useEffect(() => {
@@ -17,26 +26,31 @@ const Cart = () => {
     }
   }, [cartData]);
 
-  const handleAddition = async (sneakerId) => {
-    const exists = cart.find((sneaker) => sneaker.sneakerId._id === sneakerId);
+  const handleAddition = async (cartItemId) => {
+    const exists = cart.find((sneaker) => sneaker._id === cartItemId);
 
     if (exists) {
       try {
         const response = await fetch(
           `https://kicks-culture-backend.vercel.app/sneakers/cart/${exists._id}`,
+
           {
             method: "POST",
+
             headers: {
               "Content-Type": "application/json",
             },
+
             body: JSON.stringify({
               quantity: exists.quantity + 1,
             }),
           }
         );
+
         if (!response.ok) {
           throw "Failed to add sneaker.";
         }
+
         const updatedData = await response.json();
 
         setCart((prevvalue) =>
@@ -46,6 +60,7 @@ const Cart = () => {
         );
 
         console.log("Cart Updated", updatedData);
+
         console.log(updatedData);
       } catch (error) {
         console.log(error);
@@ -53,17 +68,20 @@ const Cart = () => {
     }
   };
 
-  const handleSubstraction = async (sneakerId) => {
+  const handleSubstraction = async (cartItemId) => {
     try {
-      const sneaker = cart.find((item) => item.sneakerId._id === sneakerId);
+      const sneaker = cart.find((item) => item._id === cartItemId);
 
       const response = await fetch(
         `https://kicks-culture-backend.vercel.app/sneakers/cart/decrement/${sneaker._id}`,
+
         {
           method: "POST",
+
           headers: {
             "Content-Type": "application/json",
           },
+
           body: JSON.stringify({ quantity: sneaker.quantity }),
         }
       );
@@ -88,6 +106,7 @@ const Cart = () => {
     try {
       const response = await fetch(
         `https://kicks-culture-backend.vercel.app/sneakers/cart/delete/${cartItemId}`,
+
         {
           method: "DELETE",
         }
@@ -96,12 +115,15 @@ const Cart = () => {
       if (!response.ok) {
         throw "Failed to update sneaker.";
       }
+
       const updatedData = await response.json();
 
       setCart((prevvalue) =>
         prevvalue.filter((item) => item._id !== cartItemId)
       );
+
       console.log("Deleted successfully:", updatedData);
+      setToastMessage("Sneaker removed from the cart.");
     } catch (error) {
       console.log("Error in delete the sneaker.");
     }
@@ -111,13 +133,17 @@ const Cart = () => {
     try {
       const response = await fetch(
         "https://kicks-culture-backend.vercel.app/sneakers/wishlist",
+
         {
           method: "POST",
+
           headers: {
             "Content-Type": "application/json",
           },
+
           body: JSON.stringify({
             userId: "69178123a154f88538f56d4e",
+
             sneakerId: sneakerId,
           }),
         }
@@ -126,24 +152,33 @@ const Cart = () => {
       if (!response.ok) {
         throw "Failed to add sneaker.";
       }
+
       const data = await response.json();
+
       console.log("Sneaker added to the wishlist", data);
 
       if (data?.message === "Sneaker added to the wishlist successfully.") {
         console.log("Added to wishlist → deleting from cart...");
+
         await handleDelete(cartItemId);
+        setToastMessage("Sneaker added to the wishlist successfully.");
         return;
       }
 
       if (data?.message === "Sneaker already in wishlist.") {
         console.log("Sneaker already in wishlist → deleting from cart...");
+
         await handleDelete(cartItemId);
+
         return;
       }
     } catch (error) {
       console.log("Error in adding the sneaker in wishlist", error);
     }
   };
+
+  console.log("Cart", cart);
+
   if (cartLoading)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
@@ -153,18 +188,21 @@ const Cart = () => {
         <p className="text-dark fs-5">Loading...</p>
       </div>
     );
+
   if (cartError)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <p className="text-dark fs-5">Error: {cartError}</p>
       </div>
     );
+
   if (!cartData || cartData?.length === 0 || !cart || cart?.length === 0)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <p className="text-dark fs-5">Cart is empty.</p>
       </div>
     );
+
   const subTotal = Array.isArray(cart)
     ? cart.reduce((acc, curr) => acc + curr.sneakerId.price * curr.quantity, 0)
     : 0;
@@ -173,23 +211,23 @@ const Cart = () => {
     <div className="container">
       <h1>Bag</h1>
       <div className="row">
-        <div className="col">
+        <div className="col-12 col-lg-7">
           {cart?.map((sneaker) => (
             <div key={sneaker._id}>
-              <div className="card mb-3" style={{ width: "800px" }}>
+              <div className="card mb-3 w-100" style={{ width: "800px" }}>
                 <div className="row g-0">
-                  <div className="col-md-4">
+                  <div className="col-12 col-md-4">
                     <img
                       src={sneaker.sneakerId.image1Url}
-                      className="img-fluid rounded-start"
+                      className="img-fluid rounded-start w-100"
                       alt="sneakerPhoto"
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: "pointer", objectFit: "cover" }}
                       onClick={() =>
                         (window.location.href = `/sneakerPage/${sneaker.sneakerId._id}`)
                       }
                     />
                   </div>
-                  <div className="col-md-8">
+                  <div className="col-12 col-md-8">
                     <div className="card-body">
                       <span>{sneaker.sneakerId.brand}</span>
                       <h5
@@ -201,9 +239,11 @@ const Cart = () => {
                       >
                         {sneaker.sneakerId.sneakerName}
                       </h5>
-                      <span className="text-body-secondary">
-                        Size: {sneaker.size} UK
-                      </span>
+                      <div>
+                        <span className="text-body-secondary">
+                          Size: {sneaker.size} UK
+                        </span>
+                      </div>
                       <p>MRP: ₹{sneaker.sneakerId.price}</p>
                       <div className="mt-4">
                         <div class="btn-group border rounded-pill px-3 py-2">
@@ -212,7 +252,7 @@ const Cart = () => {
                             className="btn btn-sm p-0 border-0"
                             onClick={() =>
                               sneaker.quantity > 1
-                                ? handleSubstraction(sneaker.sneakerId._id)
+                                ? handleSubstraction(sneaker._id)
                                 : handleDelete(sneaker._id)
                             }
                           >
@@ -226,14 +266,11 @@ const Cart = () => {
                           <button
                             type="button"
                             className="btn btn-sm p-0 border-0"
-                            onClick={() =>
-                              handleAddition(sneaker.sneakerId._id)
-                            }
+                            onClick={() => handleAddition(sneaker._id)}
                           >
                             <i className="bi bi-plus-lg"></i>
                           </button>
                         </div>
-
                         <button
                           type="button"
                           className="btn border rounded-pill px-3 py-2 d-flex align-items-center justify-content-center mt-3"
@@ -253,7 +290,7 @@ const Cart = () => {
           ))}
         </div>
         <div className="col">
-          <h3 className="mb-4">Summary</h3>
+          <h3 className="mb-4">Order Summary</h3>
           <div>
             {cart?.map((sneaker) => (
               <div
@@ -264,7 +301,7 @@ const Cart = () => {
                   <p className="mb-1 fw-semibold">
                     {sneaker.sneakerId.sneakerName}
                   </p>
-                  <p className="mb-0 text-muted">Qty: {sneaker.quantity}</p>
+                  <p className="mb-0 text-muted">{sneaker.quantity} item</p>
                 </div>
                 <div className="text-end">
                   <p className="mb-0 fw-semibold">
@@ -290,14 +327,19 @@ const Cart = () => {
             </span>
           </div>
           <hr />
-          <div className="d-grid gap-2 col-6 mx-auto">
-            <button className="btn btn-dark p-3" type="button">
+          <div className="d-grid gap-2 col-6 mx-auto mb-3">
+            <Link
+              to="/checkout"
+              className="btn btn-dark p-3 text-decoration-none hover-text-primary text-light"
+            >
               Checkout
-            </button>
+            </Link>
           </div>
         </div>
       </div>
+      <Toast title="Sneaker" toastMessage={toastMessage} />
     </div>
   );
 };
+
 export default Cart;

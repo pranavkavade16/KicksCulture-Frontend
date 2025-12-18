@@ -1,24 +1,38 @@
 import useSneakersContext from "../context/SneakersContext";
+import Toast from "../components/Toast";
 import { Link } from "react-router-dom";
+
 import { useEffect, useState } from "react";
 
 const Wishlist = () => {
   const [productSize, setProductSize] = useState();
+  const [toastMessage, setToastMessage] = useState("");
   const [selectedSneaker, setSelectedSneaker] = useState(null);
+
   const {
     wishlistData,
+
     wishlistLoading,
+
     wishlistError,
+
     fetchWishlist,
+
     cart,
+
     setCart,
+
     setWishlistData,
   } = useSneakersContext();
 
-  // ✅ Fetch latest wishlist on mount (in case user comes from another page)
   useEffect(() => {
     fetchWishlist();
   }, [fetchWishlist]);
+
+  const showToast = (message) => {
+    setToastMessage(null);
+    setTimeout(() => setToastMessage(message), 0);
+  };
 
   const handleWishlist = async (sneaker) => {
     try {
@@ -31,6 +45,7 @@ const Wishlist = () => {
       if (exists) {
         response = await fetch(
           `https://kicks-culture-backend.vercel.app/sneakers/wishlist/delete/${exists._id}`,
+
           { method: "DELETE" }
         );
 
@@ -44,7 +59,7 @@ const Wishlist = () => {
         );
 
         console.log(" Sneaker removed from wishlist");
-
+        showToast("Sneaker removed to wishlist!");
         return;
       }
     } catch (error) {
@@ -55,43 +70,58 @@ const Wishlist = () => {
   const handleCart = async () => {
     if (!productSize) {
       alert("Please select your size");
+
       return;
     }
+
     const exists = cart?.find(
       (sneaker) => sneaker.sneakerId?._id === selectedSneaker._id
     );
+
     if (exists) {
       alert("Sneaker already in cart");
+
       return;
     }
 
     try {
       const response = await fetch(
         "https://kicks-culture-backend.vercel.app/sneakers/cart",
+
         {
           method: "POST",
+
           headers: {
             "Content-Type": "application/json",
           },
+
           body: JSON.stringify({
             userId: "69178123a154f88538f56d4e",
+
             sneakerId: selectedSneaker._id,
+
             quantity: 1,
+
             size: productSize,
           }),
         }
       );
+
       if (!response.ok) {
         throw "Failed to add sneaker.";
       }
+
       const data = await response.json();
 
       console.log("Added Sneaker", data);
 
       const newCartItem = {
         userId: "69178123a154f88538f56d4e",
+
         sneakerId: selectedSneaker,
+
         quantity: 1,
+
         size: productSize,
       };
 
@@ -99,19 +129,28 @@ const Wishlist = () => {
 
       setTimeout(() => {
         const modalEl = document.getElementById("exampleModal");
+
         const modalInstance = bootstrap.Modal.getInstance(modalEl);
+
         if (modalInstance) {
           modalInstance.hide();
         }
 
         document
+
           .querySelectorAll(".modal-backdrop")
+
           .forEach((el) => el.remove());
+
         document.body.classList.remove("modal-open");
+
         document.body.style.overflow = "auto";
+
         document.body.style.paddingRight = "0";
+
         console.log("Sneaker added to cart successfully!");
       }, 200);
+      showToast("Sneaker added to cart!");
     } catch (error) {
       console.log(error);
     }
@@ -126,12 +165,14 @@ const Wishlist = () => {
         <p className="text-dark fs-5">Loading...</p>
       </div>
     );
+
   if (wishlistError)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <p className="text-dark fs-5">Error: {wishlistError}</p>
       </div>
     );
+
   if (!wishlistData)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
@@ -139,21 +180,28 @@ const Wishlist = () => {
       </div>
     );
 
+  if (wishlistData.length === 0)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <p className="text-dark fs-5">Wishlist is empty.</p>
+      </div>
+    );
+
   return (
     <div className="container p-3">
       <h1 className="lexend-exa m-3">Wishlisted</h1>
-      <div className="row row-cols-1 row-cols-md-4 g-4">
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
         {wishlistData?.map((sneaker) => (
-          <div key={sneaker._id}>
+          <div key={sneaker._id} className="mb-3">
             <div className="col">
-              <div className="card" style={{ height: "510px" }}>
+              <div className="card" style={{ height: "580px" }}>
                 <Link
                   to={`/sneakerPage/${sneaker.sneakerId?._id}`}
                   className="text-decoration-none text-dark hover-text-primary"
                 >
                   <img
                     src={sneaker.sneakerId?.image1Url}
-                    className="card-img-top"
+                    className="card-img-top img-fluid"
                     alt="sneakerPhoto"
                   />
                 </Link>
@@ -168,7 +216,7 @@ const Wishlist = () => {
                     className="text-decoration-none text-dark hover-text-primary"
                   >
                     <h5 className="card-title">
-                      {sneaker.sneakerId?.sneakerName}
+                      {sneaker.sneakerId?.sneakerName.slice(0, 35)}
                     </h5>
                   </Link>
                   <p className="card-text">
@@ -186,16 +234,17 @@ const Wishlist = () => {
                       data-bs-target="#exampleModal"
                       onClick={() => {
                         setSelectedSneaker(sneaker.sneakerId);
+
                         setProductSize(null);
                       }}
                     >
                       Add to cart
                     </button>
-
                     <button
                       className="btn w-50 py-3 text-center fw-semibold text-primary rounded-0"
                       onClick={() => {
                         handleWishlist(sneaker.sneakerId);
+                        setSelectedSneaker(sneaker.sneakerId);
                       }}
                     >
                       Remove
@@ -229,14 +278,14 @@ const Wishlist = () => {
             </div>
             <div class="modal-body">
               <div className="row">
-                <div className="col">
+                <div className="col-12 col-md-6">
                   <img
                     src={selectedSneaker?.image1Url}
                     alt="sneakerPhoto"
-                    className="w-75"
+                    className="w-75 img-fluid"
                   />
                 </div>
-                <div className="col">
+                <div className="col-12 col-md-6 mt-3 mt-md-0">
                   <h6>{selectedSneaker?.sneakerName}</h6>
                   <p>MRP: {selectedSneaker?.price}</p>
                   <span>Select Size: </span> <br />
@@ -283,7 +332,9 @@ const Wishlist = () => {
           </div>
         </div>
       </div>
+      <Toast title={selectedSneaker?.sneakerName} toastMessage={toastMessage} />
     </div>
   );
 };
+
 export default Wishlist;

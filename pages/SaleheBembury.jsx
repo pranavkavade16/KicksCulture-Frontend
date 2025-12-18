@@ -1,23 +1,15 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import ProductList from "../components/ProductList";
 
 import useSneakersContext from "../context/SneakersContext";
 
-import Toast from "../components/Toast";
+import { useState, useEffect } from "react";
 
-import { useState, useEffect, useMemo } from "react";
-
-import * as bootstrap from "bootstrap";
-
-const SneakerPage = () => {
+const SaleheBembury = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   const [size, setSize] = useState();
-
-  const [addedToCart, setAddedToCart] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
 
   const {
     sneakersData,
@@ -32,26 +24,17 @@ const SneakerPage = () => {
 
     wishlistData,
 
-    fetchWishlist,
-
-    setWishlistData,
+    setWishlist,
   } = useSneakersContext();
 
-  useEffect(() => {
-    fetchWishlist();
-  }, [fetchWishlist]);
-
-  const { sneakerId } = useParams();
-
   const allSneakerData = sneakersData?.find(
-    (sneaker) => sneaker._id === sneakerId
+    (sneaker) => sneaker._id === "6936b611b51335272923e5c0"
   );
-  console.log("wishlist data", wishlistData);
-  console.log("selected sneaker", allSneakerData);
+
   useEffect(() => {
     if (wishlistData && allSneakerData) {
       const exists = wishlistData.some(
-        (item) => item.sneakerId?._id === allSneakerData._id
+        (item) => item.sneakerId._id === allSneakerData._id
       );
 
       setIsWishlisted(exists);
@@ -61,7 +44,7 @@ const SneakerPage = () => {
   const handleWishlist = async () => {
     try {
       const exists = wishlistData.find(
-        (item) => item.sneakerId?._id === allSneakerData._id
+        (sneaker) => sneaker.sneakerId._id === allSneakerData._id
       );
 
       let response;
@@ -70,23 +53,22 @@ const SneakerPage = () => {
         response = await fetch(
           `https://kicks-culture-backend.vercel.app/sneakers/wishlist/delete/${exists._id}`,
 
-          { method: "DELETE" }
+          {
+            method: "DELETE",
+          }
         );
 
-        if (!response.ok)
-          throw new Error("Failed to remove sneaker from wishlist.");
+        setIsWishlisted(!isWishlisted);
 
-        await response.json();
+        if (!response.ok) {
+          throw "Failed to remove sneaker.";
+        }
 
-        setWishlistData((prev) =>
-          prev.filter((item) => item._id !== exists._id)
-        );
+        const data = await response.json();
 
-        setIsWishlisted(false);
+        console.log("Sneaker removed from wishlist", data);
 
-        setToastMessage("Sneaker removed from wishlist!");
-
-        console.log(" Sneaker removed from wishlist");
+        setWishlist((prev) => prev.filter((item) => item._id !== exists._id));
 
         return;
       }
@@ -97,7 +79,9 @@ const SneakerPage = () => {
         {
           method: "POST",
 
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
 
           body: JSON.stringify({
             userId: "69178123a154f88538f56d4e",
@@ -107,41 +91,34 @@ const SneakerPage = () => {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to add sneaker to wishlist.");
+      if (!response.ok) {
+        throw "Failed to add sneaker.";
+      }
 
       const data = await response.json();
 
-      const rawItem = data.newSneaker || data.data;
+      console.log("Sneaker added to the wishlist", data);
 
-      const normalizedItem = {
-        ...rawItem,
-        sneakerId: allSneakerData,
-      };
-      setWishlistData((prev) => [...prev, normalizedItem]);
+      setWishlist((prev) => [...prev, allSneakerData]);
 
       setIsWishlisted(true);
-
-      setToastMessage("Sneaker added to wishlist!");
-
-      console.log("Sneaker added to wishlist:", data);
     } catch (error) {
-      console.error("Error handling wishlist:", error);
+      console.log("Error in adding the sneaker in wishlist", error);
     }
   };
 
   const handleCart = async () => {
     if (!size) {
-      setShowAlert(false);
-      setTimeout(() => setShowAlert(true), 0);
-      return;
+      alert("Please select your size");
     }
-    setShowAlert(false);
 
     const exists = cart.find(
-      (sneaker) =>
-        sneaker.sneakerId?._id === allSneakerData._id &&
-        Number(sneaker.size) === size
+      (sneaker) => sneaker.sneakerId._id === allSneakerData._id
     );
+
+    if (!exists) {
+      setCart((prev) => [...prev, allSneakerData]);
+    }
 
     try {
       const response = await fetch(
@@ -173,96 +150,63 @@ const SneakerPage = () => {
       const data = await response.json();
 
       console.log("Added Sneaker", data);
-
-      const newCartItem = {
-        userId: "69178123a154f88538f56d4e",
-
-        sneakerId: allSneakerData,
-
-        quantity: 1,
-
-        size,
-      };
-
-      setCart((prev) => [...prev, newCartItem]);
-      setToastMessage("Sneaker added to cart!");
-      setAddedToCart(true);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getRandomNumber1 = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
-  const getRandomNumber2 = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
+  console.log("Cart", cart);
 
-  if (sneakersLoading)
-    return (
-      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
-        <div className="spinner-border text-dark mb-3" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-        <p className="text-dark fs-5">Loading...</p>
-      </div>
-    );
+  console.log("Size", size);
 
-  if (sneakersError)
-    return (
-      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
-        <p className="text-dark fs-5">Error: {sneakersError}</p>
-      </div>
-    );
+  console.log("wishlist", wishlistData);
 
-  if (!sneakersData)
-    return (
-      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
-        <p className="text-dark fs-5">No Data Available.</p>
-      </div>
-    );
+  if (sneakersLoading) return <p>Loading...</p>;
+
+  if (sneakersError) return <p>Error: {sneakersError}</p>;
+
+  if (!sneakersData) return <p>No data available</p>;
 
   return (
     <>
       <div className="container p-3">
         <h1 className="lexend-exa">Sneaker</h1>
         <div className="row">
-          <div className="col-12 col-md-8">
+          <div className="col-8">
             <div className="container">
               <div className="row">
-                <div className="col-6 col-sm-6">
+                <div className="col-6">
                   <img
                     className="img-fluid"
                     src={allSneakerData.image1Url}
-                    alt="sneakerImage1"
+                    alt=""
                   />
                 </div>
-                <div className="col-6 col-sm-6">
+                <div className="col-6">
                   <img
                     className="img-fluid"
                     src={allSneakerData.image2Url}
-                    alt="sneakerImage2"
+                    alt=""
                   />
                 </div>
-                <div className="col-6 col-sm-6 mt-4">
+                <div className="col-6 mt-4">
                   <img
                     className="img-fluid"
                     src={allSneakerData.image3Url}
-                    alt="sneakerImage3"
+                    alt=""
                   />
                 </div>
-                <div className="col-6 col-sm-6 mt-4">
+                <div className="col-6 mt-4">
                   <img
                     className="img-fluid"
                     src={allSneakerData.image4Url}
-                    alt="sneakerImage4"
+                    alt=""
                   />
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-12 col-md-4 mt-4 mt-md-0">
+          <div className="col-4">
             <div className="container">
               <div className="row">
                 <div className="col">
@@ -276,7 +220,7 @@ const SneakerPage = () => {
                     style={{
                       color: isWishlisted ? "red" : "none",
 
-                      borderColor: "black",
+                      borderColor: isWishlisted ? "red" : "black",
 
                       cursor: "pointer",
                     }}
@@ -306,7 +250,7 @@ const SneakerPage = () => {
                         autoComplete="off"
                         key={size}
                         value={size}
-                        onChange={() => setSize(event.target.value)}
+                        onChange={() => setSize(size)}
                         required
                       />
                       <label
@@ -318,28 +262,13 @@ const SneakerPage = () => {
                       </label>
                     </p>
                   ))}
-                  <div className="mt-4">
-                    {showAlert ? (
-                      <div class="alert alert-warning" role="alert">
-                        Please select size!
-                      </div>
-                    ) : null}
+                  <div className="d-grid gap-2 mt-4">
                     <button
-                      className="btn btn-dark w-100 p-3"
+                      className="btn btn-dark p-3"
                       type="button"
                       onClick={handleCart}
-                      id="liveToastBtn"
                     >
-                      {addedToCart ? (
-                        <Link
-                          to="/cart"
-                          className="text-decoration-none hover-text-primary text-light"
-                        >
-                          Go to cart
-                        </Link>
-                      ) : (
-                        "Add to Cart"
-                      )}
+                      Add to cart
                     </button>
                   </div>
                   <div className="d-grid gap-2 mt-4">
@@ -368,7 +297,7 @@ const SneakerPage = () => {
                           className="accordion-collapse collapse show"
                           data-bs-parent="#accordionExample"
                         >
-                          <div className="accordion-body">
+                          <div class="accordion-body">
                             {allSneakerData.description}
                           </div>
                         </div>
@@ -440,7 +369,7 @@ const SneakerPage = () => {
       <div className="container p-3">
         <h3 className="lexend-exa">You may also like</h3>
         <ProductList
-          data={sneakersData.slice(5, 9)}
+          data={sneakersData.slice(0, 4)}
           loading={sneakersLoading}
           error={sneakersError}
         />
@@ -534,9 +463,8 @@ const SneakerPage = () => {
           </div>
         </div>
       </div>
-      <Toast title={allSneakerData?.sneakerName} toastMessage={toastMessage} />
     </>
   );
 };
 
-export default SneakerPage;
+export default SaleheBembury;

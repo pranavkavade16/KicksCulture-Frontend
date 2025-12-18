@@ -3,14 +3,19 @@ import ProductList from "../components/ProductList";
 import useFilter from "../customHooks/useFilter";
 import SideBar from "../components/SideBar";
 import SortBy from "../components/SortBy";
+
 const Jordan = () => {
   const { sneakersData, sneakersLoading, sneakersError } = useSneakersContext();
-  const { products, handleFilter, handleSortChange } = useFilter(sneakersData);
+
+  const { products, filters, handleFilter, handleSortChange, clearFilters } =
+    useFilter(sneakersData);
+
   console.log(sneakersData);
 
   const jordanSneakers = products?.filter(
     (sneaker) => sneaker.brand === "Jordan"
   );
+
   if (sneakersLoading)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
@@ -20,12 +25,14 @@ const Jordan = () => {
         <p className="text-dark fs-5">Loading...</p>
       </div>
     );
+
   if (sneakersError)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <p className="text-dark fs-5">Error: {sneakersError}</p>
       </div>
     );
+
   if (!sneakersData)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
@@ -37,7 +44,11 @@ const Jordan = () => {
     <div className="container py-3">
       <h1 className="lexend-exa">Nike Air Jordan</h1>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <SideBar onFilterChange={handleFilter} />
+        <SideBar
+          onFilterChange={handleFilter}
+          filters={filters}
+          clearFilters={clearFilters}
+        />
         <div className="m-4">
           <div className="d-flex align-items-center gap-2">
             <h5 className="mb-0">Sort By: </h5>
@@ -53,4 +64,5 @@ const Jordan = () => {
     </div>
   );
 };
+
 export default Jordan;

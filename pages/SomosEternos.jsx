@@ -1,23 +1,34 @@
-import { useParams } from "react-router-dom";
-import ProductList from "../components/ProductList";
-import useSneakersContext from "../context/SneakersContext";
-import { useState, useEffect } from "react";
+import { useParams } from 'react-router-dom';
+
+import ProductList from '../components/ProductList';
+
+import useSneakersContext from '../context/SneakersContext';
+
+import { useState, useEffect } from 'react';
 
 const SomosEternos = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
+
   const [size, setSize] = useState();
+
   const {
     sneakersData,
+
     sneakersLoading,
+
     sneakersError,
+
     cart,
+
     setCart,
+
     wishlistData,
+
     setWishlist,
   } = useSneakersContext();
 
   const allSneakerData = sneakersData?.find(
-    (sneaker) => sneaker._id === "690dd25524c08715466fa5ff"
+    (sneaker) => sneaker._id === '690dd25524c08715466fa5ff'
   );
 
   useEffect(() => {
@@ -25,6 +36,7 @@ const SomosEternos = () => {
       const exists = wishlistData.some(
         (item) => item.sneakerId._id === allSneakerData._id
       );
+
       setIsWishlisted(exists);
     }
   }, [wishlistData, allSneakerData]);
@@ -32,101 +44,130 @@ const SomosEternos = () => {
   const handleWishlist = async () => {
     try {
       const exists = wishlistData.find(
-        (sneaker) => sneaker.sneakerId._id === allSneakerData._id
+        (sneaker) =>
+          sneaker.sneakerId._id === allSneakerData._id && sneaker.size === size
       );
+
       let response;
+
       if (exists) {
         response = await fetch(
           `https://kicks-culture-backend.vercel.app/sneakers/wishlist/delete/${exists._id}`,
+
           {
-            method: "DELETE",
+            method: 'DELETE',
           }
         );
 
         setIsWishlisted(!isWishlisted);
 
         if (!response.ok) {
-          throw "Failed to remove sneaker.";
+          throw 'Failed to remove sneaker.';
         }
 
         const data = await response.json();
-        console.log("Sneaker removed from wishlist", data);
+
+        console.log('Sneaker removed from wishlist', data);
 
         setWishlist((prev) => prev.filter((item) => item._id !== exists._id));
+
         return;
       }
 
       response = await fetch(
-        "https://kicks-culture-backend.vercel.app/sneakers/wishlist",
+        'https://kicks-culture-backend.vercel.app/sneakers/wishlist',
+
         {
-          method: "POST",
+          method: 'POST',
+
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
+
           body: JSON.stringify({
-            userId: "69178123a154f88538f56d4e",
+            userId: '69178123a154f88538f56d4e',
+
             sneakerId: allSneakerData._id,
           }),
         }
       );
+
       if (!response.ok) {
-        throw "Failed to add sneaker.";
+        throw 'Failed to add sneaker.';
       }
+
       const data = await response.json();
-      console.log("Sneaker added to the wishlist", data);
+
+      console.log('Sneaker added to the wishlist', data);
+
       setWishlist((prev) => [...prev, allSneakerData]);
 
       setIsWishlisted(true);
     } catch (error) {
-      console.log("Error in adding the sneaker in wishlist", error);
+      console.log('Error in adding the sneaker in wishlist', error);
     }
   };
 
   const handleCart = async () => {
     if (!size) {
-      alert("Please select your size");
+      alert('Please select your size');
     }
+
     const exists = cart.find(
       (sneaker) => sneaker.sneakerId._id === allSneakerData._id
     );
+
     if (!exists) {
       setCart((prev) => [...prev, allSneakerData]);
     }
 
     try {
       const response = await fetch(
-        "https://kicks-culture-backend.vercel.app/sneakers/cart",
+        'https://kicks-culture-backend.vercel.app/sneakers/cart',
+
         {
-          method: "POST",
+          method: 'POST',
+
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
+
           body: JSON.stringify({
-            userId: "69178123a154f88538f56d4e",
+            userId: '69178123a154f88538f56d4e',
+
             sneakerId: allSneakerData._id,
+
             quantity: 1,
+
             size,
           }),
         }
       );
+
       if (!response.ok) {
-        throw "Failed to add sneaker.";
+        throw 'Failed to add sneaker.';
       }
+
       const data = await response.json();
 
-      console.log("Added Sneaker", data);
+      console.log('Added Sneaker', data);
     } catch (error) {
       console.log(error);
     }
   };
-  console.log("Cart", cart);
-  console.log("Size", size);
 
-  console.log("wishlist", wishlistData);
+  console.log('Cart', cart);
+
+  console.log('Size', size);
+
+  console.log('wishlist', wishlistData);
 
   if (sneakersLoading) return <p>Loading...</p>;
+
   if (sneakersError) return <p>Error: {sneakersError}</p>;
+
   if (!sneakersData) return <p>No data available</p>;
+
   return (
     <>
       <div className="container p-3">
@@ -173,14 +214,16 @@ const SomosEternos = () => {
                   <i
                     className={
                       isWishlisted
-                        ? "bi bi-heart-fill d-flex justify-content-end"
-                        : "bi bi-heart d-flex justify-content-end"
+                        ? 'bi bi-heart-fill d-flex justify-content-end'
+                        : 'bi bi-heart d-flex justify-content-end'
                     }
                     onClick={handleWishlist}
                     style={{
-                      color: isWishlisted ? "red" : "none",
-                      borderColor: isWishlisted ? "red" : "black",
-                      cursor: "pointer",
+                      color: isWishlisted ? 'red' : 'none',
+
+                      borderColor: isWishlisted ? 'red' : 'black',
+
+                      cursor: 'pointer',
                     }}
                   ></i>
                   <span className="m-2">{allSneakerData.brand}</span>
@@ -191,9 +234,9 @@ const SomosEternos = () => {
                   <br /> <br />
                   <h5 className="m-2">
                     ₹{allSneakerData.price}
-                    {"   "}
+                    {'   '}
                     <span className="fw-lighter mb-2 ms-2">
-                      {" "}
+                      {' '}
                       MRP(Inclusive of all taxes)
                     </span>
                   </h5>
@@ -279,7 +322,7 @@ const SomosEternos = () => {
                           data-bs-parent="#accordionExample"
                         >
                           <div className="accordion-body">
-                            All purchases are subject to delivery fees. <br />{" "}
+                            All purchases are subject to delivery fees. <br />{' '}
                             <br />
                             Standard delivery 4–9 business days Orders are
                             processed and delivered Monday–Friday (excluding
@@ -298,7 +341,7 @@ const SomosEternos = () => {
                             aria-expanded="false"
                             aria-controls="collapseThree"
                           >
-                            Reviews {"        "}
+                            Reviews {'        '}
                           </button>
                         </h2>
                         <div
@@ -332,7 +375,6 @@ const SomosEternos = () => {
           error={sneakersError}
         />
       </div>
-
       <div className="container mb-5">
         <h3 className="lexend-exa">FAQ</h3>
         <div className="accordion" id="accordionExample">
@@ -425,4 +467,5 @@ const SomosEternos = () => {
     </>
   );
 };
+
 export default SomosEternos;

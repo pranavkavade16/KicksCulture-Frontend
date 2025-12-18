@@ -1,15 +1,21 @@
-import { Link } from "react-router-dom";
-import useFetch from "../customHooks/useFetch";
-import useSneakersContext from "../context/SneakersContext";
-import ProductList from "../components/ProductList";
+import { Link } from 'react-router-dom';
+
+import useFetch from '../customHooks/useFetch';
+
+import useSneakersContext from '../context/SneakersContext';
+
+import ProductList from '../components/ProductList';
 
 const FrontPage = () => {
   const { sneakersData, sneakersLoading, sneakersError } = useSneakersContext();
+
   const {
     data: newArrivalData,
+
     loading: newArrivalLoading,
+
     error: newArrivalError,
-  } = useFetch("https://kicks-culture-backend.vercel.app/sneakers/newArrival");
+  } = useFetch('https://kicks-culture-backend.vercel.app/sneakers/newArrival');
 
   if (sneakersLoading || newArrivalLoading)
     return (
@@ -20,6 +26,7 @@ const FrontPage = () => {
         <p className="text-dark fs-5">Loading...</p>
       </div>
     );
+
   if (sneakersError || newArrivalError)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
@@ -28,12 +35,14 @@ const FrontPage = () => {
         </p>
       </div>
     );
+
   if (!sneakersData || !newArrivalData)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <p className="text-dark fs-5">No Data Available.</p>
       </div>
     );
+
   return (
     <div className="overflow-hidden">
       <div id="carouselExampleIndicators" className="carousel slide">
@@ -67,7 +76,7 @@ const FrontPage = () => {
         </div>
         <div className="carousel-inner">
           <div className="carousel-item active">
-            <Link to={"/adidasSamba"}>
+            <Link to={'/adidasSamba'}>
               <img
                 src="https://www.superkicks.in/cdn/shop/files/DESKTOP-TOKYO-F.gif?v=1761723225"
                 className="d-block w-100 img-fluid"
@@ -76,7 +85,7 @@ const FrontPage = () => {
             </Link>
           </div>
           <div className="carousel-item">
-            <Link to={"/somosEternos"}>
+            <Link to={'/somosEternos'}>
               <img
                 src="https://www.superkicks.in/cdn/shop/files/2_-_2025-10-16T171816.615.png?v=1760615363"
                 className="d-block w-100 img-fluid"
@@ -94,9 +103,9 @@ const FrontPage = () => {
             </Link>
           </div>
           <div className="carousel-item">
-            <Link to="/jordan">
+            <Link to="/saleheBembury">
               <img
-                src="https://static.nike.com/a/images/w_2880,h_1410,c_fill,f_auto/b2518af5-645e-4544-b81e-f49108b6dc4f/image.png"
+                src="https://www.superkicks.in/cdn/shop/files/d_2.jpg?v=1764659589"
                 className="d-block w-100 img-fluid"
                 alt="JordanCoverPhoto"
               />
@@ -142,7 +151,6 @@ const FrontPage = () => {
               View All
             </Link>
           </div>
-
           <div className="row row-cols-1 row-cols-md-4 g-4">
             {newArrivalData?.slice(0, 4).map((sneaker) => (
               <div key={sneaker._id}>
@@ -179,7 +187,6 @@ const FrontPage = () => {
           </div>
         </div>
       </div>
-
       <div className="conatiner mt-4">
         <div className="card-group mt-4">
           <Link
@@ -203,7 +210,6 @@ const FrontPage = () => {
               </div>
             </div>
           </Link>
-
           <Link
             to={`/adidasOriginals`}
             className="text-decoration-none text-dark hover-text-primary w-25"
@@ -225,7 +231,6 @@ const FrontPage = () => {
               </div>
             </div>
           </Link>
-
           <Link
             to={`/newBalance`}
             className="text-decoration-none text-dark hover-text-primary w-25"
@@ -247,7 +252,6 @@ const FrontPage = () => {
               </div>
             </div>
           </Link>
-
           <Link
             to={`/puma`}
             className="text-decoration-none text-dark hover-text-primary w-25"

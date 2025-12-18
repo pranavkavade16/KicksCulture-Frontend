@@ -2,7 +2,6 @@ import FrontPage from "../pages/FrontPage";
 import NavBar from "../components/NavBar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./App.css";
 import NewArrival from "../pages/NewArrival";
 import SneakerPage from "../pages/SneakerPage";
@@ -23,7 +22,8 @@ import Search from "../components/Search";
 import AdidasSamba from "../pages/AdidasSamba";
 import Footer from "../components/Footer";
 import ScrollOnTop from "../components/ScrollOnTop";
-import * as bootstrap from "bootstrap";
+import SaleheBembury from "../pages/SaleheBembury";
+import Checkout from "../pages/Checkout";
 
 function App() {
   return (
@@ -50,6 +50,8 @@ function App() {
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/addAddress" element={<AddAddress />} />
             <Route path="/about" element={<About />} />
+            <Route path="/saleheBembury" element={<SaleheBembury />} />
+            <Route path="/checkout" element={<Checkout />} />
           </Routes>
           <Footer />
         </Router>

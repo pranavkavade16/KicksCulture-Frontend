@@ -1,35 +1,114 @@
-import useFetch from "../customHooks/useFetch";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import useFetch from '../customHooks/useFetch';
+
+import { useEffect, useState, useMemo } from 'react';
+import Toast from '../components/Toast';
+import { Link } from 'react-router-dom';
+
+import useSneakersContext from '../context/SneakersContext';
+
 const ProfilePage = () => {
   const [edit, setEdit] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [toastMessage, setToastMessage] = useState('');
+  const [formData, setFormData] = useState({
+    pinCode: '',
+    flatNumber: '',
+    completeAddress: '',
+    firstName: '',
+    lastName: '',
+    mobileNumber: '',
+    defaultAddress: false,
+  });
+  const { address, setAddress } = useSneakersContext();
   const { data, loading, error } = useFetch(
-    "https://kicks-culture-backend.vercel.app/profile"
+    'https://kicks-culture-backend.vercel.app/profile'
   );
+
   const { data: addressData } = useFetch(
-    "https://kicks-culture-backend.vercel.app/address"
+    'https://kicks-culture-backend.vercel.app/address'
   );
-  console.log(addressData);
+
+  const { data: orderData } = useFetch(
+    'https://kicks-culture-backend.vercel.app/order'
+  );
+
+  useEffect(() => {
+    if (Array.isArray(addressData)) {
+      setAddress(addressData);
+    } else {
+      setAddress([]);
+    }
+  }, [addressData]);
+
+  useEffect(() => {
+    if (selectedAddress) {
+      setFormData(selectedAddress);
+    } else {
+      setFormData({
+        pinCode: '',
+        flatNumber: '',
+        completeAddress: '',
+        firstName: '',
+        lastName: '',
+        mobileNumber: '',
+        defaultAddress: false,
+      });
+    }
+  }, [selectedAddress]);
+
+  console.log(orderData);
+  const handleEdit = async (addressId) => {
+    try {
+      const payload = { ...formData };
+      const response = await fetch(
+        `https://kicks-culture-backend.vercel.app/address/edit/${addressId}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        console.log('Failed to update the address.');
+      }
+
+      const updatedAddress = await response.json();
+      console.log('Address updated successfully.', updatedAddress);
+      setAddress((prevValue) =>
+        prevValue.map((item) =>
+          item._id === addressId ? updatedAddress.address : item
+        )
+      );
+      setEdit(false);
+    } catch (error) {
+      console.log('Error in updating the address.', error);
+    }
+  };
+
+  console.log(formData);
 
   const handleAddressDelete = async (addressId) => {
     try {
       const response = await fetch(
         `https://kicks-culture-backend.vercel.app/address/delete/${addressId}`,
         {
-          method: "DELETE",
+          method: 'DELETE',
         }
       );
 
       if (!response.ok) {
-        console.log("Failed to delete the address.");
-        return;
+        throw 'Failed to delete the address';
       }
 
-      const data = await response.json();
-      console.log("Address deleted successfully:", data);
+      const deletedAddress = await response.json();
+      setAddress((prevValue) =>
+        prevValue.filter((item) => item._id !== addressId)
+      );
+      console.log('Deleted successfully', deletedAddress);
+      setToastMessage('Address deleted successfully.');
     } catch (error) {
-      console.log("Error in deleting the address.", error);
+      console.log('Error in deleting the address.');
     }
   };
 
@@ -42,12 +121,14 @@ const ProfilePage = () => {
         <p className="text-dark fs-5">Loading...</p>
       </div>
     );
+
   if (error)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <p className="text-dark fs-5">Error: {error}</p>
       </div>
     );
+
   if (!data)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
@@ -57,22 +138,22 @@ const ProfilePage = () => {
 
   return (
     <div className="container py-4">
-      <div className="row">
-        <div className="col-1">
+      <div className="row align-items-center">
+        <div className="col-3 col-md-1">
           <img
             src="https://placehold.co/120x120"
             class="rounded-circle"
-            alt=""
+            alt="profilePicture"
           />
         </div>
         <div className="col">
-          <h2 className="m-4 ms-5">
+          <h2 className="ms-5">
             <span>{data[0].fristName} </span>
             <span> {data[0].lastName}</span>
           </h2>
         </div>
       </div>
-      <div className="mt-3">
+      <div className="mt-4">
         <nav>
           <div className="nav nav-tabs" id="nav-tab" role="tablist">
             <button
@@ -85,7 +166,7 @@ const ProfilePage = () => {
               aria-controls="nav-home"
               aria-selected="true"
             >
-              Overview
+              My Profile
             </button>
             <button
               className="nav-link"
@@ -97,7 +178,7 @@ const ProfilePage = () => {
               aria-controls="nav-profile"
               aria-selected="false"
             >
-              My Address
+              My Orders
             </button>
             <button
               className="nav-link"
@@ -109,19 +190,7 @@ const ProfilePage = () => {
               aria-controls="nav-contact"
               aria-selected="false"
             >
-              My Order
-            </button>
-            <button
-              className="nav-link"
-              id="nav-disabled-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#nav-disabled"
-              type="button"
-              role="tab"
-              aria-controls="nav-disabled"
-              aria-selected="false"
-            >
-              Profile
+              My Address
             </button>
           </div>
         </nav>
@@ -133,64 +202,37 @@ const ProfilePage = () => {
             aria-labelledby="nav-home-tab"
             tabindex="0"
           >
-            <h4 className="mt-3">My Orders</h4>
-            <div className="card mb-3" style={{ maxWidth: "" }}>
-              <div className="row g-0">
-                <div className="col-md-1">
-                  <img
-                    src="https://pdp.gokwik.co/kp-account/assets/icons/no-order-found.png"
-                    className="img-fluid rounded-start"
-                    alt="..."
-                  />
-                </div>
-                <div className="col-md-8">
-                  <div className="card-body">
-                    <h5 className="card-title">No past orders yet</h5>
-                    <p className="card-text">
-                      Start your first order to see it here.
-                    </p>
-                    <p className="card-text">
-                      <small className="text-body-secondary">
-                        <Link to="/">Shop Now</Link>
-                      </small>
-                    </p>
-                  </div>
+            <h4 className="mt-4">Profile</h4>
+
+            <div>
+              <div className="d-flex align-items-start mb-3">
+                <i className="bi bi-person-vcard fs-4 me-3"></i>
+                <div>
+                  <p className="text-secondary mb-0">First Name</p>
+                  <p className="fw-semibold">{data[0].fristName}</p>
                 </div>
               </div>
-            </div>
-            <h4>Saved Address</h4>
-            <div className="row">
-              {addressData?.map((address) => (
-                <div className="col-3">
-                  <div className="m-3">
-                    <div
-                      className="card"
-                      style={{ width: "17rem", height: "16rem" }}
-                    >
-                      <div className="card-body">
-                        <h4 className="card-title">
-                          {address.firstName} {address.lastName}{" "}
-                        </h4>
-
-                        <p className="card-text">
-                          {address.flatNumber}, {address.completeAddress}
-                        </p>
-                        <p className="card-text">{address.mobileNumber}</p>
-                      </div>
-                      <div className="card-footer p-0">
-                        <div className="d-flex w-100">
-                          <button
-                            className="btn w-100 py-2 text-center fw-semibold text-danger rounded-0"
-                            onClick={() => handleAddressDelete(address._id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              <div className="d-flex align-items-start mb-3">
+                <i className="bi bi-person-vcard fs-4 me-3"></i>
+                <div>
+                  <p className="text-secondary mb-0">Last Name</p>
+                  <p className="fw-semibold">{data[0].lastName}</p>
                 </div>
-              ))}
+              </div>
+              <div className="d-flex align-items-start mb-3">
+                <i className="bi bi-telephone fs-4 me-3"></i>
+                <div>
+                  <p className="text-secondary mb-0">Phone Number</p>
+                  <p className="fw-semibold">{data[0].mobileNumber}</p>
+                </div>
+              </div>
+              <div className="d-flex align-items-start mb-3">
+                <i className="bi bi-envelope fs-4 me-3"></i>
+                <div>
+                  <p className="text-secondary mb-0">Email ID</p>
+                  <p className="fw-semibold">{data[0].email}</p>
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -200,50 +242,53 @@ const ProfilePage = () => {
             aria-labelledby="nav-profile-tab"
             tabindex="0"
           >
-            <h4 className="mt-4">All Address</h4>
-            <div className="row">
-              <div className="col-3">
-                <div className="m-3">
-                  <a href="/addAddress">
-                    <div
-                      className="card"
-                      style={{ width: "17rem", height: "16rem" }}
-                    >
-                      <div className="card-body">
-                        <p
-                          className="d-flex justify-content-center align-items-center"
-                          style={{ height: "200px" }}
-                        >
-                          Add New
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-
-              {addressData?.map((address) => (
-                <div className="col-3">
-                  <div className="m-3">
-                    <div
-                      className="card"
-                      style={{ width: "17rem", height: "16rem" }}
-                    >
-                      <div className="card-body">
-                        <h4 className="card-title">
-                          {address.firstName} {address.lastName}{" "}
-                        </h4>
-
-                        <p className="card-text">
-                          {address.flatNumber}, {address.completeAddress}
-                        </p>
-                        <p className="card-text">{address.mobileNumber}</p>
+            <h4 className="mt-3 mb-3">My Orders</h4>
+            {orderData?.length === 0 ? (
+              <p>No previous orders</p>
+            ) : (
+              <div className="row">
+                {orderData?.map((order, index) => (
+                  <div
+                    className="col-12 col-sm-6 col-md-4 col-lg-3 mb-3"
+                    key={order._id}
+                  >
+                    <div>
+                      <div class="card w-100" style={{ height: '280px' }}>
+                        <div class="card-body">
+                          <h5 class="card-title">
+                            Order #
+                            {new Date(order.createdAt)
+                              .getTime()
+                              .toString()
+                              .slice(-6)}
+                          </h5>
+                          <h6 class="card-subtitle mb-2 text-body-secondary">
+                            Total Amount: {order.totalPrice + 999}
+                          </h6>
+                          <h6 class="card-subtitle mb-2 text-body-secondary">
+                            Date:{' '}
+                            {new Date(order.createdAt).toLocaleDateString(
+                              'en-IN',
+                              {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                              }
+                            )}
+                          </h6>
+                          <p>Items: ({order.items.length})</p>
+                          {order.items.slice(0, 3).map((item, index) => (
+                            <div class="card-text" key={index}>
+                              <p>{item.sneakerId.sneakerName}</p>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
           <div
             className="tab-pane fade"
@@ -252,137 +297,218 @@ const ProfilePage = () => {
             aria-labelledby="nav-contact-tab"
             tabindex="0"
           >
-            <h4 className="mt-4">No past orders yet</h4>
-          </div>
-          <div
-            className="tab-pane fade"
-            id="nav-disabled"
-            role="tabpanel"
-            aria-labelledby="nav-disabled-tab"
-            tabindex="0"
-          >
-            <h4 className="mt-4">Profile</h4>
-
-            <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-              <button
-                className="btn btn-secondary btn-sm me-md-2"
-                onClick={() => setEdit(!edit)}
-              >
-                Edit
-              </button>
-            </div>
-
             {edit ? (
               <div>
-                {/* First Name */}
-                <div className="d-flex align-items-start mb-4">
-                  <i className="bi bi-person-vcard fs-4 me-3"></i>
-                  <div className="flex-grow-1">
-                    <label className="text-secondary mb-1">First Name</label>
-                    <input
-                      type="text"
-                      className="form-control border-0 border-bottom"
-                      placeholder="Enter first name"
-                    />
-                  </div>
-                </div>
-
-                {/* Last Name */}
-                <div className="d-flex align-items-start mb-4">
-                  <i className="bi bi-person-vcard fs-4 me-3"></i>
-                  <div className="flex-grow-1">
-                    <label className="text-secondary mb-1">Last Name</label>
-                    <input
-                      type="text"
-                      className="form-control border-0 border-bottom"
-                      placeholder="Enter last name"
-                    />
-                  </div>
-                </div>
-
-                {/* Phone Number */}
-                <div className="d-flex align-items-start mb-4">
-                  <i className="bi bi-telephone fs-4 me-3"></i>
-                  <div className="flex-grow-1">
-                    <div className="d-flex align-items-center">
-                      <label className="text-secondary mb-1 me-2">
-                        Phone Number
-                      </label>
-                      <OverlayTrigger
-                        placement="right"
-                        overlay={
-                          <Tooltip>Phone number cannot be edited</Tooltip>
+                <div>
+                  {/* Pin Code */}
+                  <div className="d-flex flex-column flex-md-row align-items-md-start mb-4">
+                    <i className="bi bi-geo-alt fs-4 me-md-3 mb-2 mb-md-0"></i>
+                    <div className="flex-grow-1 w-100">
+                      <label className="text-secondary mb-1">Pin Code*</label>
+                      <input
+                        type="text"
+                        className="form-control border-0 border-bottom rounded-0"
+                        placeholder="Eg: 110001"
+                        value={formData.pinCode}
+                        onChange={(event) =>
+                          setFormData({
+                            ...formData,
+                            pinCode: event.target.value,
+                          })
                         }
-                      >
-                        <i className="bi bi-info-circle text-secondary"></i>
-                      </OverlayTrigger>
+                      />
                     </div>
-                    <p className="fw-semibold border-bottom pb-1">
-                      +919417683406
-                    </p>
                   </div>
-                </div>
 
-                {/* Email ID */}
-                <div className="d-flex align-items-start mb-4">
-                  <i className="bi bi-envelope fs-4 me-3"></i>
-                  <div className="flex-grow-1">
-                    <div className="d-flex align-items-center">
-                      <label className="text-secondary mb-1 me-2">
-                        Email ID
+                  {/* Flat / Building */}
+                  <div className="d-flex flex-column flex-md-row align-items-md-start mb-4">
+                    <i className="bi bi-house-door fs-4 me-md-3 mb-2 mb-md-0"></i>
+                    <div className="flex-grow-1 w-100">
+                      <label className="text-secondary mb-1">
+                        Flat / Building Number (Optional)
                       </label>
-                      <OverlayTrigger
-                        placement="right"
-                        overlay={<Tooltip>Email cannot be edited</Tooltip>}
-                      >
-                        <i className="bi bi-info-circle text-secondary"></i>
-                      </OverlayTrigger>
+                      <input
+                        type="text"
+                        className="form-control border-0 border-bottom rounded-0"
+                        placeholder="Eg: A1, Block D"
+                        value={formData.flatNumber}
+                        onChange={(event) =>
+                          setFormData({
+                            ...formData,
+                            flatNumber: event.target.value,
+                          })
+                        }
+                      />
                     </div>
-                    <p className="fw-semibold border-bottom pb-1">
-                      pranavkavade69739@gmail.com
-                    </p>
                   </div>
+
+                  {/* Complete Address */}
+                  <div className="d-flex flex-column flex-md-row align-items-md-start mb-4">
+                    <i className="bi bi-map fs-4 me-md-3 mb-2 mb-md-0"></i>
+                    <div className="flex-grow-1 w-100">
+                      <label className="text-secondary mb-1">
+                        Complete Address*
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control border-0 border-bottom rounded-0"
+                        placeholder="Eg: Plot No: 10"
+                        value={formData.completeAddress}
+                        onChange={(event) =>
+                          setFormData({
+                            ...formData,
+                            completeAddress: event.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  {/* First Name */}
+                  <div className="d-flex flex-column flex-md-row align-items-md-start mb-4">
+                    <i className="bi bi-person fs-4 me-md-3 mb-2 mb-md-0"></i>
+                    <div className="flex-grow-1 w-100">
+                      <label className="text-secondary mb-1">First Name*</label>
+                      <input
+                        type="text"
+                        className="form-control border-0 border-bottom rounded-0"
+                        placeholder="Eg: Joe"
+                        value={formData.firstName}
+                        onChange={(event) =>
+                          setFormData({
+                            ...formData,
+                            firstName: event.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  {/* Last Name */}
+                  <div className="d-flex flex-column flex-md-row align-items-md-start mb-4">
+                    <i className="bi bi-person fs-4 me-md-3 mb-2 mb-md-0"></i>
+                    <div className="flex-grow-1 w-100">
+                      <label className="text-secondary mb-1">Last Name*</label>
+                      <input
+                        type="text"
+                        className="form-control border-0 border-bottom rounded-0"
+                        placeholder="Eg: Harrison"
+                        value={formData.lastName}
+                        onChange={(event) =>
+                          setFormData({
+                            ...formData,
+                            lastName: event.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  {/* Mobile Number */}
+                  <div className="d-flex flex-column flex-md-row align-items-md-start mb-4">
+                    <i className="bi bi-telephone fs-4 me-md-3 mb-2 mb-md-0"></i>
+                    <div className="flex-grow-1 w-100">
+                      <label className="text-secondary mb-1">
+                        Mobile Number*
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control border-0 border-bottom rounded-0"
+                        placeholder="Eg: 9876543211"
+                        value={formData.mobileNumber}
+                        onChange={(event) =>
+                          setFormData({
+                            ...formData,
+                            mobileNumber: event.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                  <Link
+                    to="/profilePage"
+                    className="btn btn-primary text-decoration-none hover-text-primary text-light"
+                    onClick={() => {
+                      handleEdit(selectedAddress._id);
+                    }}
+                  >
+                    Save Edits
+                  </Link>
                 </div>
               </div>
             ) : (
               <div>
-                <div className="d-flex align-items-start mb-3">
-                  <i className="bi bi-person-vcard fs-4 me-3"></i>
-                  <div>
-                    <p className="text-secondary mb-0">First Name</p>
-                    <p className="fw-semibold">Not provided</p>
+                <h4 className="mt-4">All Address</h4>
+                <div className="row">
+                  <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-2">
+                    <div className="m-1">
+                      <a href="/addAddress">
+                        <div
+                          className="card w-100"
+                          style={{ width: '300px', height: '255px' }}
+                        >
+                          <div className="card-body d-flex justify-content-center align-items-center">
+                            Add New
+                          </div>
+                        </div>
+                      </a>
+                    </div>
                   </div>
-                </div>
 
-                <div className="d-flex align-items-start mb-3">
-                  <i className="bi bi-person-vcard fs-4 me-3"></i>
-                  <div>
-                    <p className="text-secondary mb-0">Last Name</p>
-                    <p className="fw-semibold">Not provided</p>
-                  </div>
-                </div>
+                  {address?.map((address) => (
+                    <div
+                      className="col-12 col-sm-6 col-md-4 col-lg-3 mb-2"
+                      key={address._id}
+                    >
+                      <div className="m-1">
+                        <div
+                          className="card w-100"
+                          style={{ width: '300px', height: '255px' }}
+                        >
+                          <div className="card-body">
+                            <h4 className="card-title">
+                              {address.firstName} {address.lastName}{' '}
+                            </h4>
+                            <p className="card-text">
+                              {address.flatNumber}, {address.completeAddress}
+                            </p>
+                            <p className="card-text">{address.mobileNumber}</p>
+                          </div>
 
-                <div className="d-flex align-items-start mb-3">
-                  <i className="bi bi-telephone fs-4 me-3"></i>
-                  <div>
-                    <p className="text-secondary mb-0">Phone Number</p>
-                    <p className="fw-semibold">+919417683406</p>
-                  </div>
-                </div>
-
-                <div className="d-flex align-items-start mb-3">
-                  <i className="bi bi-envelope fs-4 me-3"></i>
-                  <div>
-                    <p className="text-secondary mb-0">Email ID</p>
-                    <p className="fw-semibold">johndoe@gmail.com</p>
-                  </div>
+                          <div className="card-footer p-0">
+                            <div className="d-flex w-100">
+                              <button
+                                className="btn w-50 py-2 text-center fw-semibold text-danger rounded-0"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"
+                                onClick={() => {
+                                  setSelectedAddress(address);
+                                  setEdit(true);
+                                }}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                className="btn w-50 py-2 text-center fw-semibold text-primary rounded-0"
+                                onClick={() => handleAddressDelete(address._id)}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
+      <Toast title="Address" toastMessage={toastMessage} />
     </div>
   );
 };
+
 export default ProfilePage;

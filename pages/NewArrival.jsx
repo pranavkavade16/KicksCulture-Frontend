@@ -8,7 +8,9 @@ import useFilter from "../customHooks/useFilter";
 const NewArrival = () => {
   const {
     data: newArrivalData,
+
     loading: newArrivalLoading,
+
     error: newArrivalError,
   } = useFetch("https://kicks-culture-backend.vercel.app/sneakers/newArrival");
 
@@ -24,12 +26,14 @@ const NewArrival = () => {
         <p className="text-dark fs-5">Loading...</p>
       </div>
     );
+
   if (newArrivalError)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <p className="text-dark fs-5">Error: {newArrivalError}</p>
       </div>
     );
+
   if (!newArrivalData)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">

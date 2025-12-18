@@ -1,5 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useSneakersContext from "../context/SneakersContext";
+import Toast from "../components/Toast";
+
 const AddAddress = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     pinCode: "",
     flatNumber: "",
@@ -10,47 +16,102 @@ const AddAddress = () => {
     defaultAddress: false,
   });
 
+  const [toastMessage, setToastMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { setAddress } = useSneakersContext();
+
   const handleChange = (event) => {
     const { id, value, type, checked } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
+
+    setFormData((prev) => ({
+      ...prev,
       [id]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
+  };
+
+  const handleAddAddress = async () => {
+    if (isSubmitting) return;
 
     try {
+      setIsSubmitting(true);
+
+      const { pinCode, completeAddress, firstName, lastName, mobileNumber } =
+        formData;
+
+      if (
+        !pinCode ||
+        !completeAddress ||
+        !firstName ||
+        !lastName ||
+        !mobileNumber
+      ) {
+        setToastMessage("Please fill all the required fields.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      const payload = { ...formData };
+
+      const res = await fetch(
+        "https://kicks-culture-backend.vercel.app/address"
+      );
+      const latestAddress = await res.json();
+
+      const addressList = Array.isArray(latestAddress) ? latestAddress : [];
+
+      const exists = addressList.some(
+        (item) =>
+          item.pinCode === payload.pinCode &&
+          item.flatNumber === payload.flatNumber &&
+          item.completeAddress === payload.completeAddress &&
+          item.firstName === payload.firstName &&
+          item.lastName === payload.lastName &&
+          item.mobileNumber === payload.mobileNumber
+      );
+
+      if (exists) {
+        setToastMessage("This address already exists.");
+        setIsSubmitting(false);
+        return;
+      }
+
       const response = await fetch(
         "https://kicks-culture-backend.vercel.app/address",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         }
       );
 
-      if (!response.ok) {
-        console.log("Failed to add address.");
-      }
+      const addedAddress = await response.json();
 
-      const data = await response.json();
-      console.log("Address added successfully:", data);
+      setAddress((prev) => [...prev, addedAddress]);
+      setToastMessage("Address added successfully!");
+
+      setTimeout(() => {
+        navigate("/profilePage");
+      }, 2500);
     } catch (error) {
-      console.log("Error adding the address", error);
+      console.error("Error adding the address:", error);
+      setToastMessage("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="container p-3">
       <h1>Add New Address</h1>
-      <br />
-      <form action="" onSubmit={handleSubmit}>
+
+      <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label for="pinCode" className="form-label">
+          <label htmlFor="pinCode" className="form-label">
             Pin Code*
           </label>
           <input
@@ -60,12 +121,12 @@ const AddAddress = () => {
             placeholder="Eg: 110001"
             value={formData.pinCode}
             onChange={handleChange}
-            required
           />
         </div>
+
         <div className="mb-3">
-          <label for="flatNumber" className="form-label">
-            Flat/Building Number (Optional)
+          <label htmlFor="flatNumber" className="form-label">
+            Flat / Building Number (Optional)
           </label>
           <input
             type="text"
@@ -76,8 +137,9 @@ const AddAddress = () => {
             onChange={handleChange}
           />
         </div>
+
         <div className="mb-3">
-          <label for="completeAddress" className="form-label">
+          <label htmlFor="completeAddress" className="form-label">
             Complete Address*
           </label>
           <input
@@ -89,8 +151,9 @@ const AddAddress = () => {
             onChange={handleChange}
           />
         </div>
+
         <div className="mb-3">
-          <label for="firstName" className="form-label">
+          <label htmlFor="firstName" className="form-label">
             First Name*
           </label>
           <input
@@ -102,8 +165,9 @@ const AddAddress = () => {
             onChange={handleChange}
           />
         </div>
+
         <div className="mb-3">
-          <label for="lastName" className="form-label">
+          <label htmlFor="lastName" className="form-label">
             Last Name*
           </label>
           <input
@@ -115,8 +179,9 @@ const AddAddress = () => {
             onChange={handleChange}
           />
         </div>
+
         <div className="mb-3">
-          <label for="mobileNumber" className="form-label">
+          <label htmlFor="mobileNumber" className="form-label">
             Mobile Number*
           </label>
           <input
@@ -128,21 +193,31 @@ const AddAddress = () => {
             onChange={handleChange}
           />
         </div>
-        <input
-          className="form-check-input"
-          type="checkbox"
-          checked={formData.defaultAddress}
-          id="defaultAddress"
-          onChange={handleChange}
-        />
-        <label className="form-check-label" for="defaultAddress">
-          <p className="ms-2">Mark as my default address</p>
-        </label>
-        <br />
-        <button className="btn btn-primary" type="submit">
-          Save Address
+
+        <div className="form-check mb-3">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id="defaultAddress"
+            checked={formData.defaultAddress}
+            onChange={handleChange}
+          />
+          <label className="form-check-label" htmlFor="defaultAddress">
+            Mark as my default address
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          className="btn btn-primary"
+          disabled={isSubmitting}
+          onClick={handleAddAddress}
+        >
+          {isSubmitting ? "Saving..." : "Save Address"}
         </button>
       </form>
+
+      <Toast title="Address" toastMessage={toastMessage} />
     </div>
   );
 };

@@ -8,14 +8,14 @@ const About = () => {
           <h2 class="lexend-exa">About KicksCulture</h2>
         </div>
         <div className="row">
-          <div className="col-5">
+          <div className="col-12 col-md-4 mb-4">
             <img
               src="https://static.nike.com/a/images/w_1280,c_limit,q_auto,f_auto/255de165-c28d-4b30-a8d0-762f04b1b9c4/air-jordan-1-low-og-chicago-hq6998-600-release-date.jpg"
-              style={{ width: "400px" }}
-              alt="nikePhoto"
+              alt="Air Jordan 1 Low OG Chicago"
+              style={{ height: "350px", width: "380px" }}
             />
           </div>
-          <div className="col">
+          <div className="col-12 col-md-8">
             <p>
               Born in 2018, KicksCulture emerged with a vision to create a
               platform for the authentic expression of streetwear culture and

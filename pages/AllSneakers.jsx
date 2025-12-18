@@ -5,6 +5,7 @@ import useSneakersContext from "../context/SneakersContext";
 import useFilter from "../customHooks/useFilter";
 import Toast from "../components/Toast";
 import { useState } from "react";
+
 const AllSneakers = () => {
   const { sneakersData, sneakersLoading, sneakersError } = useSneakersContext();
 
@@ -20,18 +21,21 @@ const AllSneakers = () => {
         <p className="text-dark fs-5">Loading...</p>
       </div>
     );
+
   if (sneakersError)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <p className="text-dark fs-5">Error: {sneakersError}</p>
       </div>
     );
+
   if (!sneakersData)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <p className="text-dark fs-5">No Data Available.</p>
       </div>
     );
+
   return (
     <div className="container py-3">
       <h1 className="lexend-exa">All Sneakers</h1>
