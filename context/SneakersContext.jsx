@@ -19,6 +19,7 @@ export function SneakersProvider({ children }) {
   const [wishlistData, setWishlistData] = useState([]);
   const [wishlistLoading, setWishlistLoading] = useState(true);
   const [wishlistError, setWishlistError] = useState(null);
+  const [toastMessage, setToastMessage] = useState({ message: "", id: 0 });
   const {
     data: sneakersData,
     loading: sneakersLoading,
@@ -47,6 +48,16 @@ export function SneakersProvider({ children }) {
   useEffect(() => {
     fetchWishlist();
   }, []);
+  const showToast = (message) => {
+    setToastMessage({
+      message: message,
+      id: Date.now(),
+    });
+
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 2000);
+  };
 
   return (
     <SneakersContext.Provider
@@ -66,6 +77,9 @@ export function SneakersProvider({ children }) {
         cartData,
         cartLoading,
         cartError,
+        toastMessage,
+        setToastMessage,
+        showToast,
       }}
     >
       {children}

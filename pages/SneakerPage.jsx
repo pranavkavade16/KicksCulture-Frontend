@@ -1,13 +1,8 @@
 import { Link, useParams } from "react-router-dom";
-
 import ProductList from "../components/ProductList";
-
 import useSneakersContext from "../context/SneakersContext";
-
 import Toast from "../components/Toast";
-
 import { useState, useEffect, useMemo } from "react";
-
 import * as bootstrap from "bootstrap";
 
 const SneakerPage = () => {
@@ -17,7 +12,6 @@ const SneakerPage = () => {
 
   const [addedToCart, setAddedToCart] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
 
   const {
     sneakersData,
@@ -35,6 +29,9 @@ const SneakerPage = () => {
     fetchWishlist,
 
     setWishlistData,
+    toastMessage,
+    setToastMessage,
+    showToast,
   } = useSneakersContext();
 
   useEffect(() => {
@@ -84,7 +81,7 @@ const SneakerPage = () => {
 
         setIsWishlisted(false);
 
-        setToastMessage("Sneaker removed from wishlist!");
+        showToast("Sneaker removed from wishlist");
 
         console.log(" Sneaker removed from wishlist");
 
@@ -121,7 +118,7 @@ const SneakerPage = () => {
 
       setIsWishlisted(true);
 
-      setToastMessage("Sneaker added to wishlist!");
+      showToast("Sneaker added to wishlist");
 
       console.log("Sneaker added to wishlist:", data);
     } catch (error) {
@@ -185,7 +182,8 @@ const SneakerPage = () => {
       };
 
       setCart((prev) => [...prev, newCartItem]);
-      setToastMessage("Sneaker added to cart!");
+      showToast("Sneaker added to the cart!");
+
       setAddedToCart(true);
     } catch (error) {
       console.log(error);

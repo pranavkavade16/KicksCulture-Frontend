@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import useSneakersContext from "../context/SneakersContext";
 
 const Cart = () => {
-  const [toastMessage, setToastMessage] = useState("");
-  const { cart, setCart } = useSneakersContext();
+  const { cart, setCart, toastMessage, showToast } = useSneakersContext();
 
   const {
     data: cartData,
@@ -123,7 +122,7 @@ const Cart = () => {
       );
 
       console.log("Deleted successfully:", updatedData);
-      setToastMessage("Sneaker removed from the cart.");
+      showToast("Sneaker removed from the cart.");
     } catch (error) {
       console.log("Error in delete the sneaker.");
     }
@@ -161,7 +160,7 @@ const Cart = () => {
         console.log("Added to wishlist → deleting from cart...");
 
         await handleDelete(cartItemId);
-        setToastMessage("Sneaker added to the wishlist successfully.");
+        showToast("Sneaker added to wishlist.");
         return;
       }
 
@@ -337,7 +336,7 @@ const Cart = () => {
           </div>
         </div>
       </div>
-      <Toast title="Sneaker" toastMessage={toastMessage} />
+      <Toast title="Notification" toastMessage={toastMessage} />
     </div>
   );
 };

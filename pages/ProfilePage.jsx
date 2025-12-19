@@ -1,35 +1,34 @@
-import useFetch from '../customHooks/useFetch';
+import useFetch from "../customHooks/useFetch";
 
-import { useEffect, useState, useMemo } from 'react';
-import Toast from '../components/Toast';
-import { Link } from 'react-router-dom';
+import { useEffect, useState, useMemo } from "react";
+import Toast from "../components/Toast";
+import { Link } from "react-router-dom";
 
-import useSneakersContext from '../context/SneakersContext';
+import useSneakersContext from "../context/SneakersContext";
 
 const ProfilePage = () => {
   const [edit, setEdit] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const [toastMessage, setToastMessage] = useState('');
   const [formData, setFormData] = useState({
-    pinCode: '',
-    flatNumber: '',
-    completeAddress: '',
-    firstName: '',
-    lastName: '',
-    mobileNumber: '',
+    pinCode: "",
+    flatNumber: "",
+    completeAddress: "",
+    firstName: "",
+    lastName: "",
+    mobileNumber: "",
     defaultAddress: false,
   });
-  const { address, setAddress } = useSneakersContext();
+  const { address, setAddress, toastMessage, showToast } = useSneakersContext();
   const { data, loading, error } = useFetch(
-    'https://kicks-culture-backend.vercel.app/profile'
+    "https://kicks-culture-backend.vercel.app/profile"
   );
 
   const { data: addressData } = useFetch(
-    'https://kicks-culture-backend.vercel.app/address'
+    "https://kicks-culture-backend.vercel.app/address"
   );
 
   const { data: orderData } = useFetch(
-    'https://kicks-culture-backend.vercel.app/order'
+    "https://kicks-culture-backend.vercel.app/order"
   );
 
   useEffect(() => {
@@ -45,12 +44,12 @@ const ProfilePage = () => {
       setFormData(selectedAddress);
     } else {
       setFormData({
-        pinCode: '',
-        flatNumber: '',
-        completeAddress: '',
-        firstName: '',
-        lastName: '',
-        mobileNumber: '',
+        pinCode: "",
+        flatNumber: "",
+        completeAddress: "",
+        firstName: "",
+        lastName: "",
+        mobileNumber: "",
         defaultAddress: false,
       });
     }
@@ -63,18 +62,18 @@ const ProfilePage = () => {
       const response = await fetch(
         `https://kicks-culture-backend.vercel.app/address/edit/${addressId}`,
         {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         }
       );
 
       if (!response.ok) {
-        console.log('Failed to update the address.');
+        console.log("Failed to update the address.");
       }
 
       const updatedAddress = await response.json();
-      console.log('Address updated successfully.', updatedAddress);
+      console.log("Address updated successfully.", updatedAddress);
       setAddress((prevValue) =>
         prevValue.map((item) =>
           item._id === addressId ? updatedAddress.address : item
@@ -82,7 +81,7 @@ const ProfilePage = () => {
       );
       setEdit(false);
     } catch (error) {
-      console.log('Error in updating the address.', error);
+      console.log("Error in updating the address.", error);
     }
   };
 
@@ -93,22 +92,22 @@ const ProfilePage = () => {
       const response = await fetch(
         `https://kicks-culture-backend.vercel.app/address/delete/${addressId}`,
         {
-          method: 'DELETE',
+          method: "DELETE",
         }
       );
 
       if (!response.ok) {
-        throw 'Failed to delete the address';
+        throw "Failed to delete the address";
       }
 
       const deletedAddress = await response.json();
       setAddress((prevValue) =>
         prevValue.filter((item) => item._id !== addressId)
       );
-      console.log('Deleted successfully', deletedAddress);
-      setToastMessage('Address deleted successfully.');
+      console.log("Deleted successfully", deletedAddress);
+      showToast("Address deleted.");
     } catch (error) {
-      console.log('Error in deleting the address.');
+      console.log("Error in deleting the address.");
     }
   };
 
@@ -253,7 +252,7 @@ const ProfilePage = () => {
                     key={order._id}
                   >
                     <div>
-                      <div class="card w-100" style={{ height: '280px' }}>
+                      <div class="card w-100" style={{ height: "280px" }}>
                         <div class="card-body">
                           <h5 class="card-title">
                             Order #
@@ -266,13 +265,13 @@ const ProfilePage = () => {
                             Total Amount: {order.totalPrice + 999}
                           </h6>
                           <h6 class="card-subtitle mb-2 text-body-secondary">
-                            Date:{' '}
+                            Date:{" "}
                             {new Date(order.createdAt).toLocaleDateString(
-                              'en-IN',
+                              "en-IN",
                               {
-                                day: '2-digit',
-                                month: 'short',
-                                year: 'numeric',
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
                               }
                             )}
                           </h6>
@@ -445,7 +444,7 @@ const ProfilePage = () => {
                       <a href="/addAddress">
                         <div
                           className="card w-100"
-                          style={{ width: '300px', height: '255px' }}
+                          style={{ width: "300px", height: "255px" }}
                         >
                           <div className="card-body d-flex justify-content-center align-items-center">
                             Add New
@@ -463,11 +462,11 @@ const ProfilePage = () => {
                       <div className="m-1">
                         <div
                           className="card w-100"
-                          style={{ width: '300px', height: '255px' }}
+                          style={{ width: "300px", height: "255px" }}
                         >
                           <div className="card-body">
                             <h4 className="card-title">
-                              {address.firstName} {address.lastName}{' '}
+                              {address.firstName} {address.lastName}{" "}
                             </h4>
                             <p className="card-text">
                               {address.flatNumber}, {address.completeAddress}
@@ -506,7 +505,7 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-      <Toast title="Address" toastMessage={toastMessage} />
+      <Toast title="Notification" toastMessage={toastMessage} />
     </div>
   );
 };

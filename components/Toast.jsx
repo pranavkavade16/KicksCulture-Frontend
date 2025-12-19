@@ -4,11 +4,12 @@ import * as bootstrap from "bootstrap";
 const Toast = ({ title, toastMessage }) => {
   useEffect(() => {
     if (toastMessage) {
-      const toastEl = document.getElementById("liveToast");
-      if (toastEl) {
-        const toast = bootstrap.Toast.getOrCreateInstance(toastEl);
-        toast.show();
-      }
+      const toast = bootstrap.Toast.getOrCreateInstance(
+        document.getElementById("liveToast")
+      );
+      toast.show();
+
+      setTimeout(() => setToastMessage(""), 2000);
     }
   }, [toastMessage]);
 
@@ -20,6 +21,8 @@ const Toast = ({ title, toastMessage }) => {
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
+        data-bs-delay="2000"
+        data-bs-autohide="true"
       >
         <div className="toast-header">
           <strong className="me-auto">{title}</strong>
@@ -30,7 +33,7 @@ const Toast = ({ title, toastMessage }) => {
             aria-label="Close"
           ></button>
         </div>
-        <div className="toast-body">{toastMessage}</div>
+        <div className="toast-body">{toastMessage?.message}</div>
       </div>
     </div>
   );

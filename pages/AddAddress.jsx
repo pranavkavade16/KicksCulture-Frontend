@@ -16,10 +16,9 @@ const AddAddress = () => {
     defaultAddress: false,
   });
 
-  const [toastMessage, setToastMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { setAddress } = useSneakersContext();
+  const { setAddress, showToast, toastMessage } = useSneakersContext();
 
   const handleChange = (event) => {
     const { id, value, type, checked } = event.target;
@@ -92,7 +91,7 @@ const AddAddress = () => {
       const addedAddress = await response.json();
 
       setAddress((prev) => [...prev, addedAddress]);
-      setToastMessage("Address added successfully!");
+      showToast("Address added successfully!");
 
       setTimeout(() => {
         navigate("/profilePage");
@@ -217,7 +216,7 @@ const AddAddress = () => {
         </button>
       </form>
 
-      <Toast title="Address" toastMessage={toastMessage} />
+      <Toast title="Notification" toastMessage={toastMessage} />
     </div>
   );
 };

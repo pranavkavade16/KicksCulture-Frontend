@@ -6,8 +6,15 @@ import Toast from "./Toast";
 const ProductList = ({ data, loading, error }) => {
   const [productSize, setProductSize] = useState();
   const [selectedSneaker, setSelectedSneaker] = useState(null);
-  const [toastMessage, setToastMessage] = useState("");
-  const { cart, setCart, wishlistData, setWishlistData } = useSneakersContext();
+
+  const {
+    cart,
+    setCart,
+    wishlistData,
+    setWishlistData,
+    toastMessage,
+    showToast,
+  } = useSneakersContext();
   console.log(selectedSneaker);
   console.log(productSize);
   useEffect(() => {
@@ -58,7 +65,7 @@ const ProductList = ({ data, loading, error }) => {
       }
       const data = await response.json();
       console.log("Sneaker added to the wishlist", data);
-      setToastMessage("Sneaker added to wishlist!");
+      showToast("Sneaker added to wishlist!");
       const wishlistItem = {
         userId: "69178123a154f88538f56d4e",
         sneakerId: sneaker,
@@ -112,8 +119,8 @@ const ProductList = ({ data, loading, error }) => {
       };
       setCart((prev) => [...prev, newCartItem]);
 
-      setToastMessage("Sneaker added to cart!");
       closeModal();
+      showToast("Sneaker added to cart!");
     } catch (error) {
       console.log(error);
     }

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 const Wishlist = () => {
   const [productSize, setProductSize] = useState();
-  const [toastMessage, setToastMessage] = useState("");
+
   const [selectedSneaker, setSelectedSneaker] = useState(null);
 
   const {
@@ -23,16 +23,13 @@ const Wishlist = () => {
     setCart,
 
     setWishlistData,
+    toastMessage,
+    showToast,
   } = useSneakersContext();
 
   useEffect(() => {
     fetchWishlist();
   }, [fetchWishlist]);
-
-  const showToast = (message) => {
-    setToastMessage(null);
-    setTimeout(() => setToastMessage(message), 0);
-  };
 
   const handleWishlist = async (sneaker) => {
     try {
@@ -127,29 +124,6 @@ const Wishlist = () => {
 
       setCart((prev) => [...prev, newCartItem]);
 
-      setTimeout(() => {
-        const modalEl = document.getElementById("exampleModal");
-
-        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-
-        if (modalInstance) {
-          modalInstance.hide();
-        }
-
-        document
-
-          .querySelectorAll(".modal-backdrop")
-
-          .forEach((el) => el.remove());
-
-        document.body.classList.remove("modal-open");
-
-        document.body.style.overflow = "auto";
-
-        document.body.style.paddingRight = "0";
-
-        console.log("Sneaker added to cart successfully!");
-      }, 200);
       showToast("Sneaker added to cart!");
     } catch (error) {
       console.log(error);
