@@ -1,7 +1,11 @@
 import useSneakersContext from "../context/SneakersContext";
+
 import ProductList from "../components/ProductList";
+
 import useFilter from "../customHooks/useFilter";
+
 import SideBar from "../components/SideBar";
+
 import SortBy from "../components/SortBy";
 
 const Jordan = () => {

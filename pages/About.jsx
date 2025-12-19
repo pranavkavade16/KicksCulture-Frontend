@@ -5,7 +5,7 @@ const About = () => {
     >
       <div className="container py-3">
         <div className="d-flex justify-content-center mb-3">
-          <h2 class="lexend-exa">About KicksCulture</h2>
+          <h2 className="lexend-exa">About KicksCulture</h2>
         </div>
         <div className="row">
           <div className="col-12 col-md-4 mb-4">

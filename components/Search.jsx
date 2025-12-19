@@ -32,26 +32,26 @@ const Search = () => {
   return (
     <div>
       <div
-        class="offcanvas offcanvas-end"
+        className="offcanvas offcanvas-end"
         tabindex="-1"
         id="offcanvasRight"
         aria-labelledby="offcanvasRightLabel"
       >
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasRightLabel">
+        <div className="offcanvas-header">
+          <h5 className="offcanvas-title" id="offcanvasRightLabel">
             Search Sneakers...
           </h5>
           <button
             type="button"
-            class="btn-close"
+            className="btn-close"
             data-bs-dismiss="offcanvas"
             aria-label="Close"
           ></button>
         </div>
-        <div class="offcanvas-body">
-          <form class="d-flex" role="search">
+        <div className="offcanvas-body">
+          <form className="d-flex" role="search">
             <input
-              class="form-control me-2"
+              className="form-control me-2"
               type="search"
               placeholder="Search"
               aria-label="Search"
@@ -67,14 +67,14 @@ const Search = () => {
                     href={`/sneakerPage/${sneaker._id}`}
                     className="text-decoration-none text-dark hover-text-primary"
                   >
-                    <div class="card m-3" style={{ width: "19rem" }}>
+                    <div className="card m-3" style={{ width: "19rem" }}>
                       <img
                         src={sneaker.image1Url}
-                        class="card-img-top"
-                        alt="..."
+                        className="card-img-top"
+                        alt="sneakerImage"
                       />
-                      <div class="card-body">
-                        <p class="card-text">{sneaker.sneakerName}</p>
+                      <div className="card-body">
+                        <p className="card-text">{sneaker.sneakerName}</p>
                       </div>
                     </div>
                   </a>

@@ -12,7 +12,6 @@ const SortBy = ({ onSortChange }) => {
     <div>
       <div className="dropdown">
         <select
-          name=""
           id="sortBy"
           onChange={(event) => handleChange(event.target.value)}
           className="btn btn-secondary dropdown-toggle btn-sm"

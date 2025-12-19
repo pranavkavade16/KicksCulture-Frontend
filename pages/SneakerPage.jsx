@@ -43,8 +43,7 @@ const SneakerPage = () => {
   const allSneakerData = sneakersData?.find(
     (sneaker) => sneaker._id === sneakerId
   );
-  console.log("wishlist data", wishlistData);
-  console.log("selected sneaker", allSneakerData);
+
   useEffect(() => {
     if (wishlistData && allSneakerData) {
       const exists = wishlistData.some(
@@ -304,7 +303,7 @@ const SneakerPage = () => {
                         autoComplete="off"
                         key={size}
                         value={size}
-                        onChange={() => setSize(event.target.value)}
+                        onChange={(event) => setSize(event.target.value)}
                         required
                       />
                       <label
@@ -322,23 +321,15 @@ const SneakerPage = () => {
                         Please select size!
                       </div>
                     ) : null}
-                    <button
-                      className="btn btn-dark w-100 p-3"
+                    <Link
+                      className="btn btn-dark w-100 p-3 text-decoration-none hover-text-primary text-light"
                       type="button"
+                      to={addedToCart ? "/cart" : null}
                       onClick={handleCart}
                       id="liveToastBtn"
                     >
-                      {addedToCart ? (
-                        <Link
-                          to="/cart"
-                          className="text-decoration-none hover-text-primary text-light"
-                        >
-                          Go to cart
-                        </Link>
-                      ) : (
-                        "Add to Cart"
-                      )}
-                    </button>
+                      {addedToCart ? "Go to cart" : "Add to Cart"}
+                    </Link>
                   </div>
                   <div className="d-grid gap-2 mt-4">
                     <h5 className="badge text-bg-secondary p-4">
@@ -532,7 +523,7 @@ const SneakerPage = () => {
           </div>
         </div>
       </div>
-      <Toast title={allSneakerData?.sneakerName} toastMessage={toastMessage} />
+      <Toast title="Notification" toastMessage={toastMessage} />
     </>
   );
 };

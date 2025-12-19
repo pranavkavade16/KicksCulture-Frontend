@@ -1,10 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-import useFetch from '../customHooks/useFetch';
+import useFetch from "../customHooks/useFetch";
 
-import useSneakersContext from '../context/SneakersContext';
-
-import ProductList from '../components/ProductList';
+import useSneakersContext from "../context/SneakersContext";
 
 const FrontPage = () => {
   const { sneakersData, sneakersLoading, sneakersError } = useSneakersContext();
@@ -15,7 +13,7 @@ const FrontPage = () => {
     loading: newArrivalLoading,
 
     error: newArrivalError,
-  } = useFetch('https://kicks-culture-backend.vercel.app/sneakers/newArrival');
+  } = useFetch("https://kicks-culture-backend.vercel.app/sneakers/newArrival");
 
   if (sneakersLoading || newArrivalLoading)
     return (
@@ -76,7 +74,7 @@ const FrontPage = () => {
         </div>
         <div className="carousel-inner">
           <div className="carousel-item active">
-            <Link to={'/adidasSamba'}>
+            <Link to={"/adidasSamba"}>
               <img
                 src="https://www.superkicks.in/cdn/shop/files/DESKTOP-TOKYO-F.gif?v=1761723225"
                 className="d-block w-100 img-fluid"
@@ -85,7 +83,7 @@ const FrontPage = () => {
             </Link>
           </div>
           <div className="carousel-item">
-            <Link to={'/somosEternos'}>
+            <Link to={"/somosEternos"}>
               <img
                 src="https://www.superkicks.in/cdn/shop/files/2_-_2025-10-16T171816.615.png?v=1760615363"
                 className="d-block w-100 img-fluid"

@@ -1,10 +1,12 @@
 import ProductList from "../components/ProductList";
+
 import SideBar from "../components/SideBar";
+
 import SortBy from "../components/SortBy";
+
 import useSneakersContext from "../context/SneakersContext";
+
 import useFilter from "../customHooks/useFilter";
-import Toast from "../components/Toast";
-import { useState } from "react";
 
 const AllSneakers = () => {
   const { sneakersData, sneakersLoading, sneakersError } = useSneakersContext();

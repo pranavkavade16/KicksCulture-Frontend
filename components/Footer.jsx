@@ -8,7 +8,7 @@ const Footer = () => {
             <i className="bi bi-instagram"></i>
           </span>
           <span className="ms-2">
-            <i class="bi bi-facebook"></i>
+            <i className="bi bi-facebook"></i>
           </span>
           <span className="ms-2">
             <i className="bi bi-youtube"></i>

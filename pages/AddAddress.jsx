@@ -49,7 +49,7 @@ const AddAddress = () => {
         !lastName ||
         !mobileNumber
       ) {
-        setToastMessage("Please fill all the required fields.");
+        showToast("Please fill all the required fields.");
         setIsSubmitting(false);
         return;
       }
@@ -74,7 +74,7 @@ const AddAddress = () => {
       );
 
       if (exists) {
-        setToastMessage("This address already exists.");
+        showToast("This address already exists.");
         setIsSubmitting(false);
         return;
       }
@@ -98,7 +98,7 @@ const AddAddress = () => {
       }, 2500);
     } catch (error) {
       console.error("Error adding the address:", error);
-      setToastMessage("Something went wrong. Please try again.");
+      showToast("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

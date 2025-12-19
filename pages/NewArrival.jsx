@@ -2,7 +2,6 @@ import useFetch from "../customHooks/useFetch";
 import SideBar from "../components/SideBar";
 import SortBy from "../components/SortBy";
 import ProductList from "../components/ProductList";
-import { useState, useEffect } from "react";
 import useFilter from "../customHooks/useFilter";
 
 const NewArrival = () => {
@@ -58,7 +57,7 @@ const NewArrival = () => {
             </div>
           </div>
         </div>
-        <div class="row row-cols-1 row-cols-md-4 g-4"></div>
+        <div className="row row-cols-1 row-cols-md-4 g-4"></div>
         <ProductList
           data={products}
           loading={newArrivalLoading}

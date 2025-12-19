@@ -11,7 +11,11 @@ const NavBar = () => {
         <div className="row">
           <div className="col-4"></div>
           <div className="col-4">
-            <a class="navbar-brand brandname" href="/" style={{ color: "red" }}>
+            <a
+              className="navbar-brand brandname"
+              href="/"
+              style={{ color: "red" }}
+            >
               <h3 className="text-center mt-3">KicksCulture</h3>
             </a>
             <nav className="mx-auto p-2">

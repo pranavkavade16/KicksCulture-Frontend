@@ -1,15 +1,16 @@
-import { useParams } from 'react-router-dom';
-
 import ProductList from '../components/ProductList';
-
 import useSneakersContext from '../context/SneakersContext';
-
-import { useState, useEffect } from 'react';
+import Toast from '../components/Toast';
+import { useState, useEffect, useMemo } from 'react';
+import * as bootstrap from 'bootstrap';
 
 const SomosEternos = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   const [size, setSize] = useState();
+
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const {
     sneakersData,
@@ -24,8 +25,17 @@ const SomosEternos = () => {
 
     wishlistData,
 
-    setWishlist,
+    fetchWishlist,
+
+    setWishlistData,
+    toastMessage,
+    setToastMessage,
+    showToast,
   } = useSneakersContext();
+
+  useEffect(() => {
+    fetchWishlist();
+  }, [fetchWishlist]);
 
   const allSneakerData = sneakersData?.find(
     (sneaker) => sneaker._id === '690dd25524c08715466fa5ff'
@@ -34,7 +44,7 @@ const SomosEternos = () => {
   useEffect(() => {
     if (wishlistData && allSneakerData) {
       const exists = wishlistData.some(
-        (item) => item.sneakerId._id === allSneakerData._id
+        (item) => item.sneakerId?._id === allSneakerData._id
       );
 
       setIsWishlisted(exists);
@@ -44,8 +54,7 @@ const SomosEternos = () => {
   const handleWishlist = async () => {
     try {
       const exists = wishlistData.find(
-        (sneaker) =>
-          sneaker.sneakerId._id === allSneakerData._id && sneaker.size === size
+        (item) => item.sneakerId?._id === allSneakerData._id
       );
 
       let response;
@@ -54,22 +63,23 @@ const SomosEternos = () => {
         response = await fetch(
           `https://kicks-culture-backend.vercel.app/sneakers/wishlist/delete/${exists._id}`,
 
-          {
-            method: 'DELETE',
-          }
+          { method: 'DELETE' }
         );
 
-        setIsWishlisted(!isWishlisted);
+        if (!response.ok)
+          throw new Error('Failed to remove sneaker from wishlist.');
 
-        if (!response.ok) {
-          throw 'Failed to remove sneaker.';
-        }
+        await response.json();
 
-        const data = await response.json();
+        setWishlistData((prev) =>
+          prev.filter((item) => item._id !== exists._id)
+        );
 
-        console.log('Sneaker removed from wishlist', data);
+        setIsWishlisted(false);
 
-        setWishlist((prev) => prev.filter((item) => item._id !== exists._id));
+        showToast('Sneaker removed from wishlist');
+
+        console.log(' Sneaker removed from wishlist');
 
         return;
       }
@@ -80,9 +90,7 @@ const SomosEternos = () => {
         {
           method: 'POST',
 
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
 
           body: JSON.stringify({
             userId: '69178123a154f88538f56d4e',
@@ -92,34 +100,41 @@ const SomosEternos = () => {
         }
       );
 
-      if (!response.ok) {
-        throw 'Failed to add sneaker.';
-      }
+      if (!response.ok) throw new Error('Failed to add sneaker to wishlist.');
 
       const data = await response.json();
 
-      console.log('Sneaker added to the wishlist', data);
+      const rawItem = data.newSneaker || data.data;
 
-      setWishlist((prev) => [...prev, allSneakerData]);
+      const normalizedItem = {
+        ...rawItem,
+        sneakerId: allSneakerData,
+      };
+      setWishlistData((prev) => [...prev, normalizedItem]);
 
       setIsWishlisted(true);
+
+      showToast('Sneaker added to wishlist');
+
+      console.log('Sneaker added to wishlist:', data);
     } catch (error) {
-      console.log('Error in adding the sneaker in wishlist', error);
+      console.error('Error handling wishlist:', error);
     }
   };
 
   const handleCart = async () => {
     if (!size) {
-      alert('Please select your size');
+      setShowAlert(false);
+      setTimeout(() => setShowAlert(true), 0);
+      return;
     }
+    setShowAlert(false);
 
     const exists = cart.find(
-      (sneaker) => sneaker.sneakerId._id === allSneakerData._id
+      (sneaker) =>
+        sneaker.sneakerId?._id === allSneakerData._id &&
+        Number(sneaker.size) === size
     );
-
-    if (!exists) {
-      setCart((prev) => [...prev, allSneakerData]);
-    }
 
     try {
       const response = await fetch(
@@ -151,63 +166,97 @@ const SomosEternos = () => {
       const data = await response.json();
 
       console.log('Added Sneaker', data);
+
+      const newCartItem = {
+        userId: '69178123a154f88538f56d4e',
+
+        sneakerId: allSneakerData,
+
+        quantity: 1,
+
+        size,
+      };
+
+      setCart((prev) => [...prev, newCartItem]);
+      showToast('Sneaker added to the cart!');
+
+      setAddedToCart(true);
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log('Cart', cart);
+  const getRandomNumber1 = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+  const getRandomNumber2 = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
 
-  console.log('Size', size);
+  if (sneakersLoading)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-dark mb-3" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="text-dark fs-5">Loading...</p>
+      </div>
+    );
 
-  console.log('wishlist', wishlistData);
+  if (sneakersError)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <p className="text-dark fs-5">Error: {sneakersError}</p>
+      </div>
+    );
 
-  if (sneakersLoading) return <p>Loading...</p>;
-
-  if (sneakersError) return <p>Error: {sneakersError}</p>;
-
-  if (!sneakersData) return <p>No data available</p>;
+  if (!sneakersData)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <p className="text-dark fs-5">No Data Available.</p>
+      </div>
+    );
 
   return (
     <>
       <div className="container p-3">
         <h1 className="lexend-exa">Sneaker</h1>
         <div className="row">
-          <div className="col-8">
+          <div className="col-12 col-md-8">
             <div className="container">
               <div className="row">
-                <div className="col-6">
+                <div className="col-6 col-sm-6">
                   <img
                     className="img-fluid"
                     src={allSneakerData.image1Url}
-                    alt=""
+                    alt="sneakerImage1"
                   />
                 </div>
-                <div className="col-6">
+                <div className="col-6 col-sm-6">
                   <img
                     className="img-fluid"
                     src={allSneakerData.image2Url}
-                    alt=""
+                    alt="sneakerImage2"
                   />
                 </div>
-                <div className="col-6 mt-4">
+                <div className="col-6 col-sm-6 mt-4">
                   <img
                     className="img-fluid"
                     src={allSneakerData.image3Url}
-                    alt=""
+                    alt="sneakerImage3"
                   />
                 </div>
-                <div className="col-6 mt-4">
+                <div className="col-6 col-sm-6 mt-4">
                   <img
                     className="img-fluid"
                     src={allSneakerData.image4Url}
-                    alt=""
+                    alt="sneakerImage4"
                   />
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-4">
+          <div className="col-12 col-md-4 mt-4 mt-md-0">
             <div className="container">
               <div className="row">
                 <div className="col">
@@ -221,7 +270,7 @@ const SomosEternos = () => {
                     style={{
                       color: isWishlisted ? 'red' : 'none',
 
-                      borderColor: isWishlisted ? 'red' : 'black',
+                      borderColor: 'black',
 
                       cursor: 'pointer',
                     }}
@@ -251,7 +300,7 @@ const SomosEternos = () => {
                         autoComplete="off"
                         key={size}
                         value={size}
-                        onChange={() => setSize(size)}
+                        onChange={(event) => setSize(event.target.value)}
                         required
                       />
                       <label
@@ -263,14 +312,21 @@ const SomosEternos = () => {
                       </label>
                     </p>
                   ))}
-                  <div className="d-grid gap-2 mt-4">
-                    <button
-                      className="btn btn-dark p-3"
+                  <div className="mt-4">
+                    {showAlert ? (
+                      <div class="alert alert-warning" role="alert">
+                        Please select size!
+                      </div>
+                    ) : null}
+                    <Link
+                      className="btn btn-dark w-100 p-3 text-decoration-none hover-text-primary text-light"
                       type="button"
+                      to={addedToCart ? '/cart' : null}
                       onClick={handleCart}
+                      id="liveToastBtn"
                     >
-                      Add to cart
-                    </button>
+                      {addedToCart ? 'Go to cart' : 'Add to Cart'}
+                    </Link>
                   </div>
                   <div className="d-grid gap-2 mt-4">
                     <h5 className="badge text-bg-secondary p-4">
@@ -298,7 +354,7 @@ const SomosEternos = () => {
                           className="accordion-collapse collapse show"
                           data-bs-parent="#accordionExample"
                         >
-                          <div class="accordion-body">
+                          <div className="accordion-body">
                             {allSneakerData.description}
                           </div>
                         </div>
@@ -370,7 +426,7 @@ const SomosEternos = () => {
       <div className="container p-3">
         <h3 className="lexend-exa">You may also like</h3>
         <ProductList
-          data={sneakersData.slice(0, 4)}
+          data={sneakersData.slice(5, 9)}
           loading={sneakersLoading}
           error={sneakersError}
         />
@@ -464,6 +520,7 @@ const SomosEternos = () => {
           </div>
         </div>
       </div>
+      <Toast title="Notification" toastMessage={toastMessage} />
     </>
   );
 };

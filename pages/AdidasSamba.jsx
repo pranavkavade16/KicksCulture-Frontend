@@ -22,13 +22,23 @@ const AdidasSamba = () => {
         <p className="text-dark fs-5">Loading...</p>
       </div>
     );
-  if (sneakersError) return <p>Error: {error}</p>;
-  if (!sneakersData) return <p>No data available</p>;
+  if (sneakersError)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <p className="text-dark fs-5">Error: {sneakersError}</p>
+      </div>
+    );
+  if (!sneakersData)
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <p className="text-dark fs-5">No Data Available.</p>
+      </div>
+    );
 
   return (
     <div>
       <div className="container py-3">
-        <h1 class="lexend-exa">Samba Shoes</h1>
+        <h1 className="lexend-exa">Samba Shoes</h1>
         <ProductList
           data={sambas}
           loading={sneakersLoading}

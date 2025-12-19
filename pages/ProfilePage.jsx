@@ -1,9 +1,7 @@
 import useFetch from "../customHooks/useFetch";
-
 import { useEffect, useState, useMemo } from "react";
 import Toast from "../components/Toast";
 import { Link } from "react-router-dom";
-
 import useSneakersContext from "../context/SneakersContext";
 
 const ProfilePage = () => {
@@ -55,7 +53,6 @@ const ProfilePage = () => {
     }
   }, [selectedAddress]);
 
-  console.log(orderData);
   const handleEdit = async (addressId) => {
     try {
       const payload = { ...formData };
@@ -84,8 +81,6 @@ const ProfilePage = () => {
       console.log("Error in updating the address.", error);
     }
   };
-
-  console.log(formData);
 
   const handleAddressDelete = async (addressId) => {
     try {
@@ -252,19 +247,19 @@ const ProfilePage = () => {
                     key={order._id}
                   >
                     <div>
-                      <div class="card w-100" style={{ height: "280px" }}>
-                        <div class="card-body">
-                          <h5 class="card-title">
+                      <div className="card w-100" style={{ height: "280px" }}>
+                        <div className="card-body">
+                          <h5 className="card-title">
                             Order #
                             {new Date(order.createdAt)
                               .getTime()
                               .toString()
                               .slice(-6)}
                           </h5>
-                          <h6 class="card-subtitle mb-2 text-body-secondary">
+                          <h6 className="card-subtitle mb-2 text-body-secondary">
                             Total Amount: {order.totalPrice + 999}
                           </h6>
-                          <h6 class="card-subtitle mb-2 text-body-secondary">
+                          <h6 className="card-subtitle mb-2 text-body-secondary">
                             Date:{" "}
                             {new Date(order.createdAt).toLocaleDateString(
                               "en-IN",
@@ -277,7 +272,7 @@ const ProfilePage = () => {
                           </h6>
                           <p>Items: ({order.items.length})</p>
                           {order.items.slice(0, 3).map((item, index) => (
-                            <div class="card-text" key={index}>
+                            <div className="card-text" key={index}>
                               <p>{item.sneakerId.sneakerName}</p>
                             </div>
                           ))}

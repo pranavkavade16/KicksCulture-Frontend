@@ -15,8 +15,7 @@ const ProductList = ({ data, loading, error }) => {
     toastMessage,
     showToast,
   } = useSneakersContext();
-  console.log(selectedSneaker);
-  console.log(productSize);
+
   useEffect(() => {
     const handleModalHidden = () => {
       document.body.classList.remove("modal-open");
@@ -129,7 +128,7 @@ const ProductList = ({ data, loading, error }) => {
   if (error) return <p>Error: {error}</p>;
   if (!data) return <p>No data available</p>;
   return (
-    <div className="">
+    <div>
       <div className="m-3">
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g4">
           {data?.map((sneaker) => (
