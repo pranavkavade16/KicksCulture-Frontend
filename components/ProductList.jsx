@@ -6,8 +6,15 @@ const ProductList = ({ data, loading, error }) => {
   const [productSize, setProductSize] = useState();
   const [selectedSneaker, setSelectedSneaker] = useState(null);
 
-  const { cart, setCart, wishlist, setWishlist, toastMessage, showToast } =
-    useSneakersContext();
+  const {
+    cart,
+    setCart,
+    wishlist,
+    setWishlist,
+    toastMessage,
+    showToast,
+    wishlistData,
+  } = useSneakersContext();
 
   useEffect(() => {
     const handleModalHidden = () => {
@@ -32,11 +39,11 @@ const ProductList = ({ data, loading, error }) => {
   const handleWishlist = async (sneaker) => {
     try {
       const exists = wishlist.find(
-        (sneaker) => sneaker.sneakerId?._id === sneaker._id
+        (item) => item.sneakerId?._id === sneaker._id
       );
       let response;
       if (exists) {
-        alert("Sneaker already in wishlist");
+        showToast("Sneaker already in wishlist");
         return;
       }
       response = await fetch(
@@ -73,9 +80,9 @@ const ProductList = ({ data, loading, error }) => {
       return;
     }
     const exists = cart?.find(
-      (sneaker) =>
-        sneaker.sneakerId?._id === selectedSneaker._id &&
-        sneaker?.size === productSize
+      (item) =>
+        item.sneakerId?._id === selectedSneaker._id &&
+        item?.size === productSize
     );
     if (exists) {
       setToast("Sneaker already in cart!");
@@ -185,8 +192,8 @@ const ProductList = ({ data, loading, error }) => {
                       <button
                         className="btn w-50 py-3 text-center fw-semibold text-primary rounded-0"
                         onClick={() => {
-                          handleWishlist(sneaker);
                           setSelectedSneaker(sneaker);
+                          handleWishlist(sneaker);
                         }}
                       >
                         {wishlist.find(
