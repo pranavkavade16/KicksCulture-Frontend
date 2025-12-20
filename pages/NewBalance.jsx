@@ -31,12 +31,14 @@ const NewBalance = () => {
 
   return (
     <div>
-      <h1>New Balance</h1>
-      <ProductList
-        data={newBalanceSneakers}
-        loading={sneakersLoading}
-        error={sneakersError}
-      />
+      <div className="container py-3">
+        <h1 className="lexend-exa">New Balance</h1>
+        <ProductList
+          data={newBalanceSneakers}
+          loading={sneakersLoading}
+          error={sneakersError}
+        />
+      </div>
     </div>
   );
 };
