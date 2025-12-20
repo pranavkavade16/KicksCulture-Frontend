@@ -133,7 +133,7 @@ const ProductList = ({ data, loading, error }) => {
           {data?.map((sneaker) => (
             <div key={sneaker._id} className="mt-4">
               <div className="col">
-                <div className="card h-100  d-flex flex-column">
+                <div className="card h-100 d-flex flex-column">
                   <Link
                     to={`/sneakerPage/${sneaker._id}`}
                     className="text-decoration-none text-dark hover-text-primary"

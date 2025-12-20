@@ -162,7 +162,7 @@ const Wishlist = () => {
         {wishlist?.map((sneaker) => (
           <div key={sneaker._id} className="mb-3">
             <div className="col">
-              <div className="card" style={{ height: "580px" }}>
+              <div className="card h-100 d-flex flex-column">
                 <Link
                   to={`/sneakerPage/${sneaker.sneakerId?._id}`}
                   className="text-decoration-none text-dark hover-text-primary"
@@ -171,6 +171,7 @@ const Wishlist = () => {
                     src={sneaker.sneakerId?.image1Url}
                     className="card-img-top img-fluid"
                     alt="sneakerPhoto"
+                    style={{ objectFit: "cover" }}
                   />
                 </Link>
                 <div className="card-body">
@@ -183,18 +184,27 @@ const Wishlist = () => {
                     to={`/sneakerPage/${sneaker.sneakerId?._id}`}
                     className="text-decoration-none text-dark hover-text-primary"
                   >
-                    <h5 className="card-title">
+                    <h5
+                      className="card-title"
+                      style={{
+                        minHeight: "48px",
+                      }}
+                    >
                       {sneaker.sneakerId?.sneakerName.slice(0, 35)}
                     </h5>
                   </Link>
                   <p className="card-text">
                     <small className="text-body-secondary">
-                      {sneaker.sneakerId?.colors}
+                      {sneaker.sneakerId?.colors.slice(0, 30)}
                     </small>
                   </p>
                   <p className="card-text">₹{sneaker.sneakerId?.price}</p>
+                  <span>
+                    Rating: {sneaker.sneakerId?.rating}{" "}
+                    <i className="bi bi-star-fill"></i>
+                  </span>
                 </div>
-                <div className="card-footer p-0">
+                <div className="card-footer p-0 mt-auto">
                   <div className="d-flex w-100">
                     <button
                       className="btn w-50 py-3 text-center fw-semibold text-danger rounded-0"
