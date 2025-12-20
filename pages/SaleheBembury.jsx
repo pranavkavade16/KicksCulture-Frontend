@@ -521,7 +521,6 @@ const SaleheBembury = () => {
           </div>
         </div>
       </div>
-      <Toast title="Notification" toastMessage={toastMessage} />
     </>
   );
 };

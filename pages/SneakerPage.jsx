@@ -24,11 +24,11 @@ const SneakerPage = () => {
 
     setCart,
 
-    wishlistData,
+    wishlist,
 
     fetchWishlist,
 
-    setWishlistData,
+    setWishlist,
     toastMessage,
     setToastMessage,
     showToast,
@@ -45,18 +45,18 @@ const SneakerPage = () => {
   );
 
   useEffect(() => {
-    if (wishlistData && allSneakerData) {
-      const exists = wishlistData.some(
+    if (wishlist && allSneakerData) {
+      const exists = wishlist.some(
         (item) => item.sneakerId?._id === allSneakerData._id
       );
 
       setIsWishlisted(exists);
     }
-  }, [wishlistData, allSneakerData]);
+  }, [wishlist, allSneakerData]);
 
   const handleWishlist = async () => {
     try {
-      const exists = wishlistData.find(
+      const exists = wishlist.find(
         (item) => item.sneakerId?._id === allSneakerData._id
       );
 
@@ -74,9 +74,7 @@ const SneakerPage = () => {
 
         await response.json();
 
-        setWishlistData((prev) =>
-          prev.filter((item) => item._id !== exists._id)
-        );
+        setWishlist((prev) => prev.filter((item) => item._id !== exists._id));
 
         setIsWishlisted(false);
 
@@ -113,7 +111,7 @@ const SneakerPage = () => {
         ...rawItem,
         sneakerId: allSneakerData,
       };
-      setWishlistData((prev) => [...prev, normalizedItem]);
+      setWishlist((prev) => [...prev, normalizedItem]);
 
       setIsWishlisted(true);
 
@@ -523,7 +521,6 @@ const SneakerPage = () => {
           </div>
         </div>
       </div>
-      <Toast title="Notification" toastMessage={toastMessage} />
     </>
   );
 };

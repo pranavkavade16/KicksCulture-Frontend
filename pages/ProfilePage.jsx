@@ -500,7 +500,6 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-      <Toast title="Notification" toastMessage={toastMessage} />
     </div>
   );
 };

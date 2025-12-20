@@ -6,6 +6,7 @@ import {
   useEffect,
   useCallback,
 } from "react";
+import useShoppingData from "../customHooks/useShoppingData";
 
 const SneakersContext = createContext();
 
@@ -16,10 +17,13 @@ export default useSneakersContext;
 export function SneakersProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [address, setAddress] = useState([]);
-  const [wishlistData, setWishlistData] = useState([]);
-  const [wishlistLoading, setWishlistLoading] = useState(true);
-  const [wishlistError, setWishlistError] = useState(null);
-  const [toastMessage, setToastMessage] = useState({ message: "", id: 0 });
+  const [wishlist, setWishlist] = useState([]);
+  const [toastMessage, setToastMessage] = useState({
+    visible: false,
+    message: "",
+    title: "Notification",
+    id: 0,
+  });
   const {
     data: sneakersData,
     loading: sneakersLoading,
@@ -29,34 +33,43 @@ export function SneakersProvider({ children }) {
     data: cartData,
     loading: cartLoading,
     error: cartError,
-  } = useFetch("https://kicks-culture-backend.vercel.app/sneakers/cart");
-  const fetchWishlist = useCallback(async () => {
-    setWishlistLoading(true);
-    try {
-      const res = await fetch(
-        "https://kicks-culture-backend.vercel.app/sneakers/wishlist"
-      );
-      if (!res.ok) throw new Error("Failed to fetch wishlist");
-      const data = await res.json();
-      setWishlistData(data);
-    } catch (error) {
-      setWishlistError(error.message);
-    } finally {
-      setWishlistLoading(false);
+    fetchData: fetchCart,
+  } = useShoppingData("https://kicks-culture-backend.vercel.app/sneakers/cart");
+  const {
+    data: wishlistData,
+    loading: wishlistLoading,
+    error: wishlistError,
+    fetchData: fetchWishlist,
+  } = useShoppingData(
+    "https://kicks-culture-backend.vercel.app/sneakers/wishlist"
+  );
+
+  useEffect(() => {
+    if (Array.isArray(wishlistData)) {
+      setWishlist(wishlistData);
     }
-  }, []);
+  }, [wishlistData]);
+
+  useEffect(() => {
+    if (Array.isArray(cartData)) {
+      setCart(cartData);
+    }
+  }, [cartData]);
+
   useEffect(() => {
     fetchWishlist();
-  }, []);
-  const showToast = (message) => {
-    setToastMessage({
-      message: message,
-      id: Date.now(),
-    });
+  }, [fetchWishlist]);
 
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 2000);
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
+
+  const showToast = (message, title = "Notification") => {
+    setToastMessage({ visible: true, message, title, id: Date.now() });
+  };
+
+  const hideToast = () => {
+    setToastMessage((prev) => ({ ...prev, visible: false }));
   };
 
   return (
@@ -70,7 +83,8 @@ export function SneakersProvider({ children }) {
         address,
         setAddress,
         wishlistData,
-        setWishlistData,
+        wishlist,
+        setWishlist,
         wishlistError,
         wishlistLoading,
         fetchWishlist,
@@ -79,6 +93,7 @@ export function SneakersProvider({ children }) {
         cartError,
         toastMessage,
         setToastMessage,
+        hideToast,
         showToast,
       }}
     >

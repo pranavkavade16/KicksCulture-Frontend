@@ -1,20 +1,13 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useSneakersContext from "../context/SneakersContext";
-import * as bootstrap from "bootstrap";
-import Toast from "./Toast";
+
 const ProductList = ({ data, loading, error }) => {
   const [productSize, setProductSize] = useState();
   const [selectedSneaker, setSelectedSneaker] = useState(null);
 
-  const {
-    cart,
-    setCart,
-    wishlistData,
-    setWishlistData,
-    toastMessage,
-    showToast,
-  } = useSneakersContext();
+  const { cart, setCart, wishlist, setWishlist, toastMessage, showToast } =
+    useSneakersContext();
 
   useEffect(() => {
     const handleModalHidden = () => {
@@ -38,7 +31,7 @@ const ProductList = ({ data, loading, error }) => {
   };
   const handleWishlist = async (sneaker) => {
     try {
-      const exists = wishlistData.find(
+      const exists = wishlist.find(
         (sneaker) => sneaker.sneakerId?._id === sneaker._id
       );
       let response;
@@ -69,8 +62,7 @@ const ProductList = ({ data, loading, error }) => {
         userId: "69178123a154f88538f56d4e",
         sneakerId: sneaker,
       };
-      setWishlistData((prev) => [...prev, wishlistItem]);
-      setWishlisted(true);
+      setWishlist((prev) => [...prev, wishlistItem]);
     } catch (error) {
       console.log("Error in adding the sneaker in wishlist", error);
     }
@@ -86,7 +78,7 @@ const ProductList = ({ data, loading, error }) => {
         sneaker?.size === productSize
     );
     if (exists) {
-      setToastMessage("Sneaker already in cart!");
+      setToast("Sneaker already in cart!");
       return;
     }
     try {
@@ -197,7 +189,7 @@ const ProductList = ({ data, loading, error }) => {
                           setSelectedSneaker(sneaker);
                         }}
                       >
-                        {wishlistData.find(
+                        {wishlist.find(
                           (item) => item.sneakerId?._id === sneaker._id
                         )
                           ? "Wishlisted❤️"
@@ -287,7 +279,6 @@ const ProductList = ({ data, loading, error }) => {
           </div>
         </div>
       </div>
-      <Toast title={selectedSneaker?.sneakerName} toastMessage={toastMessage} />
     </div>
   );
 };

@@ -3,7 +3,7 @@ import Search from "./Search";
 import useSneakersContext from "../context/SneakersContext";
 import { useEffect, useMemo, useState } from "react";
 const NavBar = () => {
-  const { cart, wishlistData } = useSneakersContext();
+  const { cart, wishlist } = useSneakersContext();
 
   return (
     <header className="bg-dark text-light">
@@ -75,12 +75,12 @@ const NavBar = () => {
               <NavLink to="/wishlist" style={{ color: "white" }}>
                 <i className="bi bi-bag-heart"></i>
               </NavLink>
-              {wishlistData?.length > 0 ? (
+              {wishlist?.length > 0 ? (
                 <span
                   className="position-absolute top-10 start-90 translate-middle badge rounded-pill bg-danger"
                   style={{ fontSize: "0.6rem", padding: "0.2em 0.4em" }}
                 >
-                  {wishlistData?.length}
+                  {wishlist?.length}
                   <span className="visually-hidden">unread messages</span>
                 </span>
               ) : null}
@@ -160,9 +160,9 @@ const NavBar = () => {
               <NavLink to="/wishlist" className="text-white fs-4">
                 <i className="bi bi-bag-heart"></i>
               </NavLink>
-              {wishlistData?.length > 0 && (
+              {wishlist?.length > 0 && (
                 <span className="badge bg-danger position-absolute top-0 start-100 translate-middle">
-                  {wishlistData?.length}
+                  {wishlist?.length}
                 </span>
               )}
             </div>

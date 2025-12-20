@@ -215,8 +215,6 @@ const AddAddress = () => {
           {isSubmitting ? "Saving..." : "Save Address"}
         </button>
       </form>
-
-      <Toast title="Notification" toastMessage={toastMessage} />
     </div>
   );
 };

@@ -10,30 +10,26 @@ const Wishlist = () => {
   const [selectedSneaker, setSelectedSneaker] = useState(null);
 
   const {
-    wishlistData,
-
     wishlistLoading,
 
     wishlistError,
 
-    fetchWishlist,
+    wishlist,
+    setWishlist,
 
     cart,
 
     setCart,
 
-    setWishlistData,
     toastMessage,
     showToast,
   } = useSneakersContext();
 
-  useEffect(() => {
-    fetchWishlist();
-  }, [fetchWishlist]);
+  console.log(wishlist);
 
   const handleWishlist = async (sneaker) => {
     try {
-      const exists = wishlistData.find(
+      const exists = wishlist.find(
         (item) => item.sneakerId?._id === sneaker._id
       );
 
@@ -51,9 +47,7 @@ const Wishlist = () => {
 
         await response.json();
 
-        setWishlistData((prev) =>
-          prev.filter((item) => item._id !== exists._id)
-        );
+        setWishlist((prev) => prev.filter((item) => item._id !== exists._id));
 
         console.log(" Sneaker removed from wishlist");
         showToast("Sneaker removed to wishlist!");
@@ -147,14 +141,14 @@ const Wishlist = () => {
       </div>
     );
 
-  if (!wishlistData)
+  if (!wishlist)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <p className="text-dark fs-5">No Data Available.</p>
       </div>
     );
 
-  if (wishlistData.length === 0)
+  if (wishlist.length === 0)
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100">
         <p className="text-dark fs-5">Wishlist is empty.</p>
@@ -165,7 +159,7 @@ const Wishlist = () => {
     <div className="container p-3">
       <h1 className="lexend-exa m-3">Wishlisted</h1>
       <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-        {wishlistData?.map((sneaker) => (
+        {wishlist?.map((sneaker) => (
           <div key={sneaker._id} className="mb-3">
             <div className="col">
               <div className="card" style={{ height: "580px" }}>
@@ -306,7 +300,6 @@ const Wishlist = () => {
           </div>
         </div>
       </div>
-      <Toast title={selectedSneaker?.sneakerName} toastMessage={toastMessage} />
     </div>
   );
 };

@@ -24,6 +24,7 @@ import Footer from "../components/Footer";
 import ScrollOnTop from "../components/ScrollOnTop";
 import SaleheBembury from "../pages/SaleheBembury";
 import Checkout from "../pages/Checkout";
+import Toast from "../components/Toast";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
             <Route path="/saleheBembury" element={<SaleheBembury />} />
             <Route path="/checkout" element={<Checkout />} />
           </Routes>
+          <Toast />
           <Footer />
         </Router>
       </SneakersProvider>

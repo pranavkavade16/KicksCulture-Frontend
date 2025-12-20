@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom';
-import useFetch from '../customHooks/useFetch';
-import Toast from '../components/Toast';
-import { useEffect } from 'react';
-import useSneakersContext from '../context/SneakersContext';
+import { Link } from "react-router-dom";
+import useFetch from "../customHooks/useFetch";
+import Toast from "../components/Toast";
+import { useEffect } from "react";
+import useSneakersContext from "../context/SneakersContext";
 
 const Cart = () => {
   const { cart, setCart, toastMessage, showToast } = useSneakersContext();
@@ -13,7 +13,7 @@ const Cart = () => {
     loading: cartLoading,
 
     error: cartError,
-  } = useFetch('https://kicks-culture-backend.vercel.app/sneakers/cart');
+  } = useFetch("https://kicks-culture-backend.vercel.app/sneakers/cart");
 
   useEffect(() => {
     if (Array.isArray(cartData)) {
@@ -32,10 +32,10 @@ const Cart = () => {
           `https://kicks-culture-backend.vercel.app/sneakers/cart/${exists._id}`,
 
           {
-            method: 'POST',
+            method: "POST",
 
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
 
             body: JSON.stringify({
@@ -45,7 +45,7 @@ const Cart = () => {
         );
 
         if (!response.ok) {
-          throw 'Failed to add sneaker.';
+          throw "Failed to add sneaker.";
         }
 
         const updatedData = await response.json();
@@ -56,7 +56,7 @@ const Cart = () => {
           )
         );
 
-        console.log('Cart Updated', updatedData);
+        console.log("Cart Updated", updatedData);
 
         console.log(updatedData);
       } catch (error) {
@@ -73,10 +73,10 @@ const Cart = () => {
         `https://kicks-culture-backend.vercel.app/sneakers/cart/decrement/${sneaker._id}`,
 
         {
-          method: 'POST',
+          method: "POST",
 
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
 
           body: JSON.stringify({ quantity: sneaker.quantity }),
@@ -84,7 +84,7 @@ const Cart = () => {
       );
 
       if (!response.ok) {
-        throw 'Failed to update the data.';
+        throw "Failed to update the data.";
       }
 
       const updatedData = await response.json();
@@ -95,7 +95,7 @@ const Cart = () => {
         )
       );
     } catch (error) {
-      console.log('Error in delete the sneaker.', error);
+      console.log("Error in delete the sneaker.", error);
     }
   };
 
@@ -105,12 +105,12 @@ const Cart = () => {
         `https://kicks-culture-backend.vercel.app/sneakers/cart/delete/${cartItemId}`,
 
         {
-          method: 'DELETE',
+          method: "DELETE",
         }
       );
 
       if (!response.ok) {
-        throw 'Failed to update sneaker.';
+        throw "Failed to update sneaker.";
       }
 
       const updatedData = await response.json();
@@ -119,27 +119,27 @@ const Cart = () => {
         prevvalue.filter((item) => item._id !== cartItemId)
       );
 
-      console.log('Deleted successfully:', updatedData);
-      showToast('Sneaker removed from the cart.');
+      console.log("Deleted successfully:", updatedData);
+      showToast("Sneaker removed from the cart.");
     } catch (error) {
-      console.log('Error in delete the sneaker.');
+      console.log("Error in delete the sneaker.");
     }
   };
 
   const handleWishlist = async (sneakerId, cartItemId) => {
     try {
       const response = await fetch(
-        'https://kicks-culture-backend.vercel.app/sneakers/wishlist',
+        "https://kicks-culture-backend.vercel.app/sneakers/wishlist",
 
         {
-          method: 'POST',
+          method: "POST",
 
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
 
           body: JSON.stringify({
-            userId: '69178123a154f88538f56d4e',
+            userId: "69178123a154f88538f56d4e",
 
             sneakerId: sneakerId,
           }),
@@ -147,30 +147,30 @@ const Cart = () => {
       );
 
       if (!response.ok) {
-        throw 'Failed to add sneaker.';
+        throw "Failed to add sneaker.";
       }
 
       const data = await response.json();
 
-      console.log('Sneaker added to the wishlist', data);
+      console.log("Sneaker added to the wishlist", data);
 
-      if (data?.message === 'Sneaker added to the wishlist successfully.') {
-        console.log('Added to wishlist → deleting from cart...');
+      if (data?.message === "Sneaker added to the wishlist successfully.") {
+        console.log("Added to wishlist → deleting from cart...");
 
         await handleDelete(cartItemId);
-        showToast('Sneaker added to wishlist.');
+        showToast("Sneaker added to wishlist.");
         return;
       }
 
-      if (data?.message === 'Sneaker already in wishlist.') {
-        console.log('Sneaker already in wishlist → deleting from cart...');
+      if (data?.message === "Sneaker already in wishlist.") {
+        console.log("Sneaker already in wishlist → deleting from cart...");
 
         await handleDelete(cartItemId);
 
         return;
       }
     } catch (error) {
-      console.log('Error in adding the sneaker in wishlist', error);
+      console.log("Error in adding the sneaker in wishlist", error);
     }
   };
 
@@ -209,14 +209,14 @@ const Cart = () => {
         <div className="col-12 col-lg-7">
           {cart?.map((sneaker) => (
             <div key={sneaker._id}>
-              <div className="card mb-3 w-100" style={{ width: '800px' }}>
+              <div className="card mb-3 w-100" style={{ width: "800px" }}>
                 <div className="row g-0">
                   <div className="col-12 col-md-4">
                     <img
                       src={sneaker.sneakerId.image1Url}
                       className="img-fluid rounded-start w-100"
                       alt="sneakerPhoto"
-                      style={{ cursor: 'pointer', objectFit: 'cover' }}
+                      style={{ cursor: "pointer", objectFit: "cover" }}
                       onClick={() =>
                         (window.location.href = `/sneakerPage/${sneaker.sneakerId._id}`)
                       }
@@ -230,7 +230,7 @@ const Cart = () => {
                         onClick={() =>
                           (window.location.href = `/sneakerPage/${sneaker.sneakerId._id}`)
                         }
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: "pointer" }}
                       >
                         {sneaker.sneakerId.sneakerName}
                       </h5>
@@ -332,7 +332,6 @@ const Cart = () => {
           </div>
         </div>
       </div>
-      <Toast title="Notification" toastMessage={toastMessage} />
     </div>
   );
 };

@@ -1,39 +1,38 @@
 import { useEffect } from "react";
 import * as bootstrap from "bootstrap";
+import useSneakersContext from "../context/SneakersContext";
 
-const Toast = ({ title, toastMessage }) => {
+const Toast = () => {
+  const { toastMessage, hideToast } = useSneakersContext();
+
   useEffect(() => {
-    if (toastMessage) {
-      const toast = bootstrap.Toast.getOrCreateInstance(
-        document.getElementById("liveToast")
-      );
-      toast.show();
+    if (!toastMessage.visible) return;
 
-      setTimeout(() => setToastMessage(""), 2000);
-    }
-  }, [toastMessage]);
+    const el = document.getElementById("liveToast");
+    const instance = bootstrap.Toast.getOrCreateInstance(el);
+
+    const handleHidden = () => {
+      hideToast();
+    };
+
+    el.addEventListener("hidden.bs.toast", handleHidden);
+    instance.show();
+
+    return () => {
+      el.removeEventListener("hidden.bs.toast", handleHidden);
+    };
+  }, [toastMessage.visible, hideToast]);
+
+  if (!toastMessage.message) return null;
 
   return (
     <div className="toast-container position-fixed bottom-0 end-0 p-3">
-      <div
-        id="liveToast"
-        className="toast"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-        data-bs-delay="2000"
-        data-bs-autohide="true"
-      >
+      <div id="liveToast" className="toast">
         <div className="toast-header">
-          <strong className="me-auto">{title}</strong>
-          <button
-            type="button"
-            className="btn-close"
-            data-bs-dismiss="toast"
-            aria-label="Close"
-          ></button>
+          <strong className="me-auto">{toastMessage.title}</strong>
+          <button type="button" className="btn-close" data-bs-dismiss="toast" />
         </div>
-        <div className="toast-body">{toastMessage?.message}</div>
+        <div className="toast-body">{toastMessage.message}</div>
       </div>
     </div>
   );
